@@ -1,2 +1,1 @@
-# django-api-template
-Main Context
+# Main Context
