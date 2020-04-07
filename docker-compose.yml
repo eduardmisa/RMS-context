@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/rms_context_volume
     ports:
-      - "8001:8001"
+      - "8001:8000"
 
 networks:
     default:
