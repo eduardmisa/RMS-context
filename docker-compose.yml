@@ -8,5 +8,8 @@ services:
     container_name: rms_context_container
     volumes:
       - .:/rms_context_volume
+    network_mode: "bridge"
+    networks:
+      - rms_network
     ports:
       - "8001:8000"
