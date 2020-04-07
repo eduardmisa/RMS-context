@@ -8,7 +8,10 @@ services:
     container_name: rms_context_container
     volumes:
       - .:/rms_context_volume
-    networks:
-      - rms_network
     ports:
       - "8001:8000"
+
+networks:
+    default:
+        external:
+            name: rms_network
