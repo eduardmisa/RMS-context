@@ -89,6 +89,7 @@ class CurrentUserContext(APIView):
         if user_context.application:
 
             permission_query = request.user.groups.values(
+                    module_code=F('permissions__module__code'),
                     module=F('permissions__module__name'),
                     permission=F('permissions__permission'),
                     method=F('permissions__method'),
