@@ -83,6 +83,13 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
+    def validate_groups (self, val):
+        is_superuser = self.initial_data.get('is_superuser')
+        if is_superuser:
+            return []
+
+        return val
+
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
