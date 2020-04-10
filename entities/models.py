@@ -2,7 +2,6 @@ from django.utils import timezone
 from django.db import models
 from .modelcommon import BaseClass
 from . import enums
-from rest_framework.serializers import ValidationError
 # Create your models here.
 
 
@@ -82,7 +81,7 @@ class Endpoint(BaseClass):
 
 class Group(BaseClass):
     code = models.CharField(unique=True, blank=False, null=False, max_length=10)
-    name = models.CharField(unique=True, blank=False, null=False, max_length=50)
+    name = models.CharField(blank=False, null=False, max_length=50)
     description = models.CharField(max_length=100, blank=True, null=True)
 
     application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='groups', blank=False, null=False, default=1)
@@ -96,6 +95,7 @@ class Group(BaseClass):
 
     class Meta:
         db_table = 'groups'
+        unique_together = ['name', 'application']
 
 
 class User(BaseClass):

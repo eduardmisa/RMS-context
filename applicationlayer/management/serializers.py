@@ -47,6 +47,32 @@ class GroupSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'createdby', 'modifiedby', 'code'
         )
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset = models.Group.objects.all(),
+                fields = ('name', 'application'),
+                message = "This group already existis in this application"
+            )
+        ]
+
+    def validate_permissions (self, val):
+        application = self.initial_data.get('application')
+        has_all_access = self.initial_data.get('has_all_access')
+        permissions = val
+
+        existing_application = models.Application.objects.filter(id=application).first()
+
+        if not existing_application:
+            raise serializers.ValidationError('Application not found')
+
+        if has_all_access:
+            return []
+
+        for item in permissions:
+            if item.module.application != existing_application:
+                raise serializers.ValidationError('Some items did not match the submited application')
+
+        return val
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
