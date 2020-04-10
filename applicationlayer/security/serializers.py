@@ -21,6 +21,7 @@ class CurrentUserContextPermissionsSerializer(serializers.Serializer):
 class CurrentUserContextApplicationSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     description = serializers.CharField(max_length=255)
+    is_administrator = serializers.BooleanField()
     permissions = CurrentUserContextPermissionsSerializer(many=True)
     external_permissions = CurrentUserContextPermissionsSerializer(many=True)
 
@@ -31,6 +32,6 @@ class CurrentUserContextSerializer(serializers.Serializer):
     middlename = serializers.CharField(max_length=255)
     lastname = serializers.CharField(max_length=255)
     birthdate = serializers.CharField(max_length=255)
-    is_administrator = serializers.BooleanField()
     group = serializers.ListField()
+    is_superuser = serializers.BooleanField()
     application = CurrentUserContextApplicationSerializer()

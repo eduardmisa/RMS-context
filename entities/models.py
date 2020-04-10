@@ -143,7 +143,9 @@ class Client(BaseClass):
 
     valid_until = models.DateTimeField(blank=False, null=False)
 
-    applications = models.ManyToManyField(Application, related_name='clients')
+    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='clients', blank=False, null=False, default=1)
+
+    applications = models.ManyToManyField(Application, related_name='clients_external_applications', blank=True)
 
     def __str__(self):
         return f'{self.name}'

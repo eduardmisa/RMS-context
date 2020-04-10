@@ -24,12 +24,11 @@ class Login(APIView):
         password = serializer.validated_data.get('password')
         scope = serializer.validated_data.get('scope')
 
+        # Validate user access
+        user = models.User.objects.filter(username=username).first()
         app = models.Application.objects.filter(code=scope).first()
         new_token = get_random_string(length=32)
         expires = datetime.now() + timedelta(hours=1)
-
-        # Validate user access
-        user = models.User.objects.filter(username=username).first()
 
         if not user:
             return Response("Invalid username or password",
@@ -39,30 +38,36 @@ class Login(APIView):
             return Response("Invalid username or password",
                             status=status.HTTP_401_UNAUTHORIZED,)
 
+        if not app:
+            return Response("Application Scope doesn't exists",
+                            status=status.HTTP_403_FORBIDDEN,)
+
+        # Verify client application access
+        client = models.Client.objects.filter(clid=client_id,
+                                              clsc=client_secret).first()
+        if not client:
+            return Response("Client ID or Client Secret does not exists",
+                            status=status.HTTP_403_FORBIDDEN,)
+        if client.valid_until < datetime.now():
+            return Response("Client access expired",
+                            status=status.HTTP_403_FORBIDDEN,)
+
+
         # Superuser should not be limited
         # to any applciations and its modules
         if not user.is_superuser:
 
-            if not app:
-                return Response("Application Scope doesn't exists",
-                                status=status.HTTP_403_FORBIDDEN,)
-
-            # Administrator should not be limited 
+            # Having atleast 1 group that has "has_all_access=True"
+            # determines if this user is Administrator of this application.
+            # Which should not be limited 
             # to any access inside assigned application's modules
-            if not user.is_administrator:
-
-                # Verify client application access
-                client = models.Client.objects.filter(clid=client_id,
-                                                    clsc=client_secret).first()
-                if not client:
-                    return Response("Client ID or Client Secret does not exists",
-                                    status=status.HTTP_403_FORBIDDEN,)
-                if client.valid_until < datetime.now():
-                    return Response("Client access expired",
-                                    status=status.HTTP_403_FORBIDDEN,)
+            is_administrator = user.groups.filter(application_id=app.id, 
+                                                  has_all_access=True).first()
+            
+            if not is_administrator:
                 # Verify user access:
                 # Note: endpoints === permissions
-                has_access = client.applications.filter(modules__endpoints__groups__users__id=user.id).count() > 0
+                has_access = client.application.modules.filter(endpoints__groups__users__id=user.id).count() > 0
                 if not has_access:
                     return Response("User access to application denied",
                                     status=status.HTTP_403_FORBIDDEN,)
@@ -82,19 +87,27 @@ class Login(APIView):
         })
 
 
+
+
+
+
 class CurrentUserContext(APIView):
     
-    def get(self, request, token=None, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         serializer = CurrentUserContextSerializer
 
         user_context = request.user
 
-        user_context.group = list(map(lambda row: row['name'], list(request.user.groups.values('name'))))
+        user_context.group = list(map(lambda row: row['name'], list(user_context.groups.values('name'))))
         user_context.application = request.auth.application
 
         if user_context.application:
 
-            permission_query = request.user.groups.values(
+            # Get all raw permissions based on client/api
+            models.Client.objects.filter()
+
+            # Get all raw permissions based on user
+            permission_query = user_context.groups.values(
                     module_code=F('permissions__module__code'),
                     module=F('permissions__module__name'),
                     permission=F('permissions__permission'),
@@ -102,6 +115,8 @@ class CurrentUserContext(APIView):
                     url=F('permissions__url')
                 ).annotate(Sum('id')).order_by('module')
 
+            user_context.application.is_administrator = user_context.groups.filter(application_id=user_context.application.id,
+                                                                                   has_all_access=True).first()
             user_context.application.permissions = permission_query.filter(permissions__module__application_id=user_context.application.id)
             user_context.application.external_permissions = permission_query.filter(~Q(permissions__module__application_id=user_context.application.id))
 
