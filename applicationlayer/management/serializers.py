@@ -48,29 +48,14 @@ class GroupSerializer(serializers.ModelSerializer):
             'createdby', 'modifiedby', 'code'
         )
 
-# USER SERIALIZERS
-# ...
-# ...
-class UserRetreiveSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        exclude = ['password', 'password_salt']
-
-class UserListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        exclude = ['password', 'password_salt']
-        
-class UserCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        exclude = ['created', 'modified', 'createdby', 'modifiedby', 'code', 'password_salt']
-
-class UserUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        exclude = ['created', 'modified', 'createdby', 'modifiedby', 'code', 'password_salt', 'password']
-
+        exclude = ['password_salt']
+        read_only_fields = ['createdby', 'modifiedby', 'code', 'password_salt']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:

@@ -39,27 +39,33 @@ class Login(APIView):
             return Response("Invalid username or password",
                             status=status.HTTP_401_UNAUTHORIZED,)
 
-        if not user.is_administrator:
+        # Superuser should not be limited
+        # to any applciations and its modules
+        if not user.is_superuser:
 
             if not app:
                 return Response("Application Scope doesn't exists",
                                 status=status.HTTP_403_FORBIDDEN,)
 
-            # Verify client application access
-            client = models.Client.objects.filter(clid=client_id,
-                                                  clsc=client_secret).first()
-            if not client:
-                return Response("Client ID or Client Secret does not exists",
-                                status=status.HTTP_403_FORBIDDEN,)
-            if client.valid_until < datetime.now():
-                return Response("Client access expired",
-                                status=status.HTTP_403_FORBIDDEN,)
-            # Verify user access:
-            # Note: endpoints === permissions
-            has_access = client.applications.filter(modules__endpoints__groups__users__id=user.id).count() > 0
-            if not has_access:
-                return Response("User access to application denied",
-                                status=status.HTTP_403_FORBIDDEN,)
+            # Administrator should not be limited 
+            # to any access inside assigned application's modules
+            if not user.is_administrator:
+
+                # Verify client application access
+                client = models.Client.objects.filter(clid=client_id,
+                                                    clsc=client_secret).first()
+                if not client:
+                    return Response("Client ID or Client Secret does not exists",
+                                    status=status.HTTP_403_FORBIDDEN,)
+                if client.valid_until < datetime.now():
+                    return Response("Client access expired",
+                                    status=status.HTTP_403_FORBIDDEN,)
+                # Verify user access:
+                # Note: endpoints === permissions
+                has_access = client.applications.filter(modules__endpoints__groups__users__id=user.id).count() > 0
+                if not has_access:
+                    return Response("User access to application denied",
+                                    status=status.HTTP_403_FORBIDDEN,)
 
         usersession = models.UserSession.objects.filter(user_id=user.id).first()
         if usersession:

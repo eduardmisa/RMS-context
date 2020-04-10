@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.db import models
 from .modelcommon import BaseClass
 from . import enums
+from rest_framework.serializers import ValidationError
 # Create your models here.
 
 
@@ -84,7 +85,11 @@ class Group(BaseClass):
     name = models.CharField(unique=True, blank=False, null=False, max_length=50)
     description = models.CharField(max_length=100, blank=True, null=True)
 
-    permissions = models.ManyToManyField(Endpoint, related_name='groups')
+    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='groups', blank=False, null=False, default=1)
+
+    has_all_access = models.BooleanField(default=False)
+
+    permissions = models.ManyToManyField(Endpoint, related_name='groups', blank=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -106,7 +111,7 @@ class User(BaseClass):
     birthdate = models.DateField(blank=False, null=False, default=timezone.now)
 
     is_active = models.BooleanField(default=True)
-    is_administrator = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     groups = models.ManyToManyField(Group, related_name='users')
 
