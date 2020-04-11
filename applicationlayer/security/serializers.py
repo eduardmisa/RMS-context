@@ -13,7 +13,7 @@ class LoginSerializer(serializers.Serializer):
 
 class CurrentUserContextPermissionsSerializer(serializers.Serializer):
     module_code = serializers.CharField(max_length=255)
-    module = serializers.CharField(max_length=255)
+    module_name = serializers.CharField(max_length=255)
     permission = serializers.CharField(max_length=255)
     method = serializers.CharField(max_length=255)
     url = serializers.CharField(max_length=255)

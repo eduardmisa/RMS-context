@@ -38,6 +38,13 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = models.User.objects.all().order_by('-created')
     serializer_class = UserSerializer
 
+    def update(self, request, *args, **kwargs):
+        self.serializer_class = UserUpdateSerializer
+        super(UserViewSet, self).update(request, *args, **kwargs)
+        instance = models.User.objects.get(id=kwargs['pk'])
+        serializer = UserSerializer(instance)
+        return Response(serializer.data)
+
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = models.Client.objects.all().order_by('-created')

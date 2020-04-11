@@ -52,7 +52,6 @@ class Login(APIView):
             return Response("Client access expired",
                             status=status.HTTP_403_FORBIDDEN,)
 
-
         # Superuser should not be limited
         # to any applciations and its modules
         if not user.is_superuser:
@@ -74,21 +73,21 @@ class Login(APIView):
 
         usersession = models.UserSession.objects.filter(user_id=user.id).first()
         if usersession:
-            usersession.delete()
-        obj = models.UserSession(user=user,
-                                 application=app,
-                                 token=new_token,
-                                 expires=expires).save()
+            # usersession.delete()
+            usersession.expires = expires
+            usersession.save()
+            new_token = usersession.token
+        else:
+            obj = models.UserSession(user=user,
+                                    application=app,
+                                    token=new_token,
+                                    expires=expires).save()
         return Response({
             'access_token': new_token,
             # 'refresh_token': obj.refresh_token,
             'expires': expires,
             'scope': scope,
         })
-
-
-
-
 
 
 class CurrentUserContext(APIView):
@@ -103,23 +102,44 @@ class CurrentUserContext(APIView):
 
         if user_context.application:
 
-            # Get all raw permissions based on client/api
-            models.Client.objects.filter()
+            user_context.application.permissions = []
+            user_context.application.external_permissions = []
+            user_context.application.is_administrator = user_context.groups.filter(
+                                                            application_id=user_context.application.id,
+                                                            has_all_access=True
+                                                        ).first() != None
 
-            # Get all raw permissions based on user
-            permission_query = user_context.groups.values(
-                    module_code=F('permissions__module__code'),
-                    module=F('permissions__module__name'),
-                    permission=F('permissions__permission'),
-                    method=F('permissions__method'),
-                    url=F('permissions__url')
-                ).annotate(Sum('id')).order_by('module')
+            permission_query = models.Endpoint.objects.values(
+                    'permission',
+                    'method',
+                    'url'
+                ).annotate(
+                    module_code=F('module__code'),
+                    module_name=F('module__name'),
+                    app_id=F('module__application__id'),
+                )
 
-            user_context.application.is_administrator = user_context.groups.filter(application_id=user_context.application.id,
-                                                                                   has_all_access=True).first()
-            user_context.application.permissions = permission_query.filter(permissions__module__application_id=user_context.application.id)
-            user_context.application.external_permissions = permission_query.filter(~Q(permissions__module__application_id=user_context.application.id),
-                                                                                    ~Q(permissions__module__application__id=None))
+            user_context.application.permissions = permission_query.filter(
+                    module__application__id=user_context.application.id
+                )
+
+            user_context.application.external_permissions = permission_query.filter(
+                    ~Q(module__application_id=user_context.application.id),
+                    ~Q(module__application__id=None),
+                    groups__users__id=user_context.id
+                ).union(
+                    # Get All Endpoints in Application when group assigned has all access
+                    permission_query.filter(
+                        ~Q(module__application_id=user_context.application.id),
+                        module__application__groups__has_all_access=True,
+                        module__application__groups__users__id=user_context.id
+                    )
+                )
+
+            if not user_context.application.is_administrator and not user_context.is_superuser:
+                user_context.application.permissions = \
+                    user_context.application.permissions.filter(
+                        groups__users__id=user_context.id)
 
         serializer = serializer(user_context)
 

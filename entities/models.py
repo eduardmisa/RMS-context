@@ -47,6 +47,7 @@ class Module(BaseClass):
     description = models.CharField(max_length=100, blank=True, null=True)
 
     application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='modules', blank=False, null=False, default=1)
+    parent = models.ForeignKey("self", on_delete=models.PROTECT, related_name='sub_modules', blank=True, null=True)
 
     def __str__(self):
         return f'{self.application.name}-{self.name}'

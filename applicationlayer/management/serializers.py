@@ -24,6 +24,16 @@ class ModuleSerializer(serializers.ModelSerializer):
                 message = "Name with this Application already exists"
             )
         ]
+    def validate_parent (self, val):
+        if val:
+            existing_app = models.Application.objects.filter(id=self.initial_data.get('application')).first() 
+            if not existing_app:
+                raise serializers.ValidationError('Application does not exists')
+
+            if val.application.id != existing_app.id:
+                raise serializers.ValidationError('Parent application does not match this application')
+
+        return val
 
 class EndpointSerializer(serializers.ModelSerializer):
     class Meta:
@@ -89,6 +99,19 @@ class UserSerializer(serializers.ModelSerializer):
             return []
 
         return val
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        exclude = ['created', 'modified', 'createdby', 'modifiedby', 'code', 'password_salt', 'password']
+
+    def validate_groups (self, val):
+        is_superuser = self.initial_data.get('is_superuser')
+        if is_superuser:
+            return []
+
+        return val
+
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
