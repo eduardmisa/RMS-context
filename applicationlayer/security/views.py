@@ -118,7 +118,8 @@ class CurrentUserContext(APIView):
             user_context.application.is_administrator = user_context.groups.filter(application_id=user_context.application.id,
                                                                                    has_all_access=True).first()
             user_context.application.permissions = permission_query.filter(permissions__module__application_id=user_context.application.id)
-            user_context.application.external_permissions = permission_query.filter(~Q(permissions__module__application_id=user_context.application.id))
+            user_context.application.external_permissions = permission_query.filter(~Q(permissions__module__application_id=user_context.application.id),
+                                                                                    ~Q(permissions__module__application__id=None))
 
         serializer = serializer(user_context)
 
