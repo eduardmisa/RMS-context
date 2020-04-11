@@ -123,17 +123,6 @@ class User(BaseClass):
             db_table = 'users'
 
 
-class UserSession(BaseClass):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_sessions', blank=False, null=False)
-    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='user_sessions', blank=True, null=True)
-    token = models.CharField(max_length=255, blank=False, null=False)
-    expires = models.DateTimeField()
-
-    class Meta:
-        db_table = 'user_sessions'
-        unique_together = ['user', 'application']
-
-
 class Client(BaseClass):
     code = models.CharField(unique=True, blank=False, null=False, max_length=10)
     name = models.CharField(unique=True, blank=False, null=False, max_length=50)
@@ -153,3 +142,16 @@ class Client(BaseClass):
 
     class Meta:
         db_table = 'clients'
+
+
+class UserSession(BaseClass):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_sessions', blank=False, null=False)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='user_sessions', blank=True, null=True)
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='user_sessions', blank=False, null=False)
+    token = models.CharField(max_length=255, blank=False, null=False)
+    expires = models.DateTimeField()
+    
+
+    class Meta:
+        db_table = 'user_sessions'
+        unique_together = ['user', 'application', 'client']

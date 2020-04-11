@@ -80,6 +80,7 @@ class Login(APIView):
         else:
             obj = models.UserSession(user=user,
                                     application=app,
+                                    client=client,
                                     token=new_token,
                                     expires=expires).save()
         return Response({
@@ -122,24 +123,20 @@ class CurrentUserContext(APIView):
             user_context.application.permissions = permission_query.filter(
                     module__application__id=user_context.application.id
                 )
-
             user_context.application.external_permissions = permission_query.filter(
-                    ~Q(module__application_id=user_context.application.id),
-                    ~Q(module__application__id=None),
-                    groups__users__id=user_context.id
-                ).union(
-                    # Get All Endpoints in Application when group assigned has all access
-                    permission_query.filter(
-                        ~Q(module__application_id=user_context.application.id),
-                        module__application__groups__has_all_access=True,
-                        module__application__groups__users__id=user_context.id
-                    )
+                    module__application__clients_external_applications__id=request.auth.client.id,
                 )
 
             if not user_context.application.is_administrator and not user_context.is_superuser:
                 user_context.application.permissions = \
                     user_context.application.permissions.filter(
-                        groups__users__id=user_context.id)
+                        groups__users__id=user_context.id
+                        )
+
+                user_context.application.external_permissions = \
+                    user_context.application.external_permissions.filter(
+                        groups__users__id=user_context.id
+                        )
 
         serializer = serializer(user_context)
 
