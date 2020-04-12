@@ -87,6 +87,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             name="Client service over all access")
     def OverallAccess(self, request, pk=None):
         self.serializer_class = CurrentUserContextPermissionsSerializer
+        self.filterset_class = EndpointFilterSet
         
         permission_query = models.Endpoint.objects.values(
                 'permission',

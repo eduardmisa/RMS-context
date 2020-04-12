@@ -12,6 +12,8 @@ class LoginSerializer(serializers.Serializer):
 
 
 class CurrentUserContextPermissionsSerializer(serializers.Serializer):
+    parent_module_name = serializers.CharField(max_length=255, required=False)
+    parent_module_code = serializers.CharField(max_length=255, required=False)
     module_code = serializers.CharField(max_length=255)
     module_name = serializers.CharField(max_length=255)
     permission = serializers.CharField(max_length=255)

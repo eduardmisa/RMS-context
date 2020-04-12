@@ -52,6 +52,10 @@ class Login(APIView):
             return Response("Client access expired",
                             status=status.HTTP_403_FORBIDDEN,)
 
+        if client.application.id != app.id:
+            return Response("App scope does not match with the client Secret ang Id",
+                            status=status.HTTP_403_FORBIDDEN,)
+
         # Superuser should not be limited
         # to any applciations and its modules
         if not user.is_superuser:
@@ -71,7 +75,12 @@ class Login(APIView):
                     return Response("User access to application denied",
                                     status=status.HTTP_403_FORBIDDEN,)
 
-        usersession = models.UserSession.objects.filter(user_id=user.id).first()
+        usersession = models.UserSession.objects.filter(
+                user_id=user.id,
+                application_id=app.id,
+                client_id=client.id
+            ).first()
+
         if usersession:
             # usersession.delete()
             usersession.expires = expires
@@ -116,6 +125,8 @@ class CurrentUserContext(APIView):
                     'method',
                     'url'
                 ).annotate(
+                    parent_module_code=F('module__parent__code'),
+                    parent_module_name=F('module__parent__name'),
                     module_code=F('module__code'),
                     module_name=F('module__name'),
                     app_id=F('module__application__id'),

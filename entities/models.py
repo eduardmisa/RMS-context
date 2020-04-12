@@ -50,11 +50,11 @@ class Module(BaseClass):
     parent = models.ForeignKey("self", on_delete=models.PROTECT, related_name='sub_modules', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.application.name}-{self.name}'
+        return f'{self.application.name}-{self.parent}-{self.name}'
 
     class Meta:
         db_table = 'modules'
-        unique_together = ['name', 'application']
+        unique_together = ['name', 'application', 'parent']
 
 
 class Endpoint(BaseClass):

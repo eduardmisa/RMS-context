@@ -20,8 +20,8 @@ class ModuleSerializer(serializers.ModelSerializer):
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset = models.Module.objects.all(),
-                fields = ('name', 'application'),
-                message = "Name with this Application already exists"
+                fields = ('name', 'application', 'parent'),
+                message = "Name with this Application and Parent Module already exists"
             )
         ]
     def validate_parent (self, val):
