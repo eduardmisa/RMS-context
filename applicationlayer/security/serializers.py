@@ -19,11 +19,14 @@ class CurrentUserContextPermissionsSerializer(serializers.Serializer):
     url = serializers.CharField(max_length=255)
 
 class CurrentUserContextApplicationSerializer(serializers.Serializer):
+    client_id = serializers.IntegerField()
     name = serializers.CharField(max_length=255)
     description = serializers.CharField(max_length=255)
     is_administrator = serializers.BooleanField()
     permissions = CurrentUserContextPermissionsSerializer(many=True)
     external_permissions = CurrentUserContextPermissionsSerializer(many=True)
+    
+
 
 class CurrentUserContextSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255)

@@ -3,14 +3,16 @@ from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-
 from django.shortcuts import render
+from rest_framework.decorators import action
 from entities import models
 from .serializers import *
 import copy
 from django.utils.crypto import get_random_string
 from middleware.security import AllowAny
 
+from applicationlayer.security.serializers import CurrentUserContextPermissionsSerializer
+from django.db.models import F, Q, Sum
 
 # Create your views here.
 
@@ -65,3 +67,30 @@ class ClientViewSet(viewsets.ModelViewSet):
         return Response(serializer.data,
                         status=status.HTTP_201_CREATED,
                         headers=headers)
+
+    @action(detail=True,
+            methods=['get'],
+            url_path='overall-access',
+            name="Client service over all access")
+    def OverallAccess(self, request, pk=None):
+        self.serializer_class = CurrentUserContextPermissionsSerializer
+        
+        permission_query = models.Endpoint.objects.values(
+                'permission',
+                'method',
+                'url'
+            ).annotate(
+                module_code=F('module__code'),
+                module_name=F('module__name'),
+                app_id=F('module__application__id'),
+            )
+
+        self.queryset = permission_query.filter(
+                                module__application__clients_external_applications__id=pk,
+                            ).union(
+                                    permission_query.filter(
+                                            module__application__clients__id=pk,
+                                        )
+                                )
+        return super(ClientViewSet, self).list(request)
+

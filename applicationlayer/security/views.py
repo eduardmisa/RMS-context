@@ -103,6 +103,7 @@ class CurrentUserContext(APIView):
 
         if user_context.application:
 
+            user_context.application.client_id = request.auth.client.id
             user_context.application.permissions = []
             user_context.application.external_permissions = []
             user_context.application.is_administrator = user_context.groups.filter(
