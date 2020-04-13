@@ -46,6 +46,9 @@ class Module(BaseClass):
     name = models.CharField(blank=False, null=False, max_length=50)
     description = models.CharField(max_length=100, blank=True, null=True)
 
+    front_icon = models.CharField(max_length=100, blank=True, null=True)
+    front_url = models.CharField(max_length=255, blank=True, null=True)
+
     application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='modules', blank=False, null=False, default=1)
     parent = models.ForeignKey("self", on_delete=models.PROTECT, related_name='sub_modules', blank=True, null=True)
 

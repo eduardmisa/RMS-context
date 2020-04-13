@@ -127,8 +127,13 @@ class CurrentUserContext(APIView):
                 ).annotate(
                     parent_module_code=F('module__parent__code'),
                     parent_module_name=F('module__parent__name'),
+                    parent_module_front_icon=F('module__parent__front_icon'),
+                    parent_module_front_url=F('module__parent__front_url'),
+
                     module_code=F('module__code'),
                     module_name=F('module__name'),
+                    module_front_icon=F('module__front_icon'),
+                    module_front_url=F('module__front_url'),
                     app_id=F('module__application__id'),
                 )
 
