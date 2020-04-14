@@ -50,14 +50,14 @@ class Module(BaseClass):
     front_url = models.CharField(max_length=255, blank=True, null=True)
 
     application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='modules', blank=False, null=False, default=1)
-    parent = models.ForeignKey("self", on_delete=models.PROTECT, related_name='sub_modules', blank=True, null=True)
+    parent = models.ForeignKey("self", on_delete=models.PROTECT, related_name='sub_modules', null=True, default=None)
 
     def __str__(self):
         return f'{self.application.name}-{self.parent}-{self.name}'
 
     class Meta:
         db_table = 'modules'
-        unique_together = ['name', 'application', 'parent']
+        unique_together = ['name', 'application']
 
 
 class Endpoint(BaseClass):
