@@ -65,7 +65,8 @@ class Endpoint(BaseClass):
 
     method = models.CharField(
         choices=[(tag.value, tag.value) for tag in enums.ApiMethodEnum],
-        default=enums.ApiMethodEnum.GET.value,
+        blank=False,
+        null=False,
         max_length=20
     )
 
@@ -73,7 +74,7 @@ class Endpoint(BaseClass):
 
     permission = models.CharField(blank=False, null=False, max_length=255)
 
-    module = models.ForeignKey(Module, on_delete=models.PROTECT, related_name='endpoints', blank=False, null=False, default=1)
+    module = models.ForeignKey(Module, on_delete=models.PROTECT, related_name='endpoints', blank=False, null=False)
 
     def __str__(self):
         return f'{self.permission}-[{self.method}]-{self.url}'
