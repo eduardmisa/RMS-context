@@ -75,7 +75,7 @@ class GroupSerializer(serializers.ModelSerializer):
         if not existing_application:
             raise serializers.ValidationError('Application not found')
 
-        if has_all_access:
+        if has_all_access == 'True':
             return []
 
         for item in permissions:

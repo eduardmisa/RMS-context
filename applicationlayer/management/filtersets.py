@@ -17,6 +17,9 @@ class ModuleFilterSet(filters.FilterSet):
 
 
 class EndpointFilterSet(filters.FilterSet):
+    application = filters.CharFilter(field_name='application', method='filter_application')
+    def filter_application(self, queryset, name, value):
+        return queryset.filter(module__application__id=value)
     class Meta:
         model = models.Endpoint
         fields = ('__all__')
