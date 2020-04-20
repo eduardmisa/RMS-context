@@ -135,7 +135,7 @@ class Client(BaseClass):
     clid = models.CharField(unique=True, blank=False, null=False, max_length=255)
     clsc = models.CharField(unique=True, blank=False, null=False, max_length=255)
 
-    valid_until = models.DateTimeField(blank=False, null=False)
+    valid_until = models.DateField(blank=False, null=False)
 
     application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='clients', blank=False, null=False, default=1)
 
