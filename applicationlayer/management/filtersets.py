@@ -5,6 +5,10 @@ from django.db.models import Q
 
 
 class ApplicationFilterSet(filters.FilterSet):
+    groups = filters.CharFilter(field_name='groups', method='filter_application_by_groups')
+    def filter_application_by_groups(self, queryset, name, value):
+        ids = value.split(',')
+        return queryset.filter(groups__id__in=ids)
     class Meta:
         model = models.Application
         fields = ('__all__')
