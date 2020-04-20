@@ -26,6 +26,10 @@ class EndpointFilterSet(filters.FilterSet):
 
 
 class GroupFilterSet(filters.FilterSet):
+    applications = filters.CharFilter(field_name='applications', method='filter_application')
+    def filter_application(self, queryset, name, value):
+        ids = value.split(',')
+        return queryset.filter(application__in=ids)
     class Meta:
         model = models.Group
         fields = ('__all__')
