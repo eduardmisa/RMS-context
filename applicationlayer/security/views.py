@@ -48,7 +48,7 @@ class Login(APIView):
         if not client:
             return Response("Client ID or Client Secret does not exists",
                             status=status.HTTP_403_FORBIDDEN,)
-        if client.valid_until < datetime.date:
+        if client.valid_until < datetime.date():
             return Response("Client access expired",
                             status=status.HTTP_403_FORBIDDEN,)
 
