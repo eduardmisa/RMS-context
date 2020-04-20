@@ -75,7 +75,7 @@ class GroupSerializer(serializers.ModelSerializer):
         if not existing_application:
             raise serializers.ValidationError('Application not found')
 
-        if has_all_access == 'True':
+        if (type(has_all_access) == str and has_all_access.lower() == 'true') or (type(has_all_access) == bool and has_all_access == True):
             return []
 
         for item in permissions:
@@ -95,7 +95,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_groups (self, val):
         is_superuser = self.initial_data.get('is_superuser')
-        if is_superuser:
+        if (type(is_superuser) == str and is_superuser.lower() == 'true') or (type(is_superuser) == bool and is_superuser == True):
             return []
 
         return val
@@ -107,7 +107,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def validate_groups (self, val):
         is_superuser = self.initial_data.get('is_superuser')
-        if is_superuser:
+        if (type(is_superuser) == str and is_superuser.lower() == 'true') or (type(is_superuser) == bool and is_superuser == True):
             return []
 
         return val
