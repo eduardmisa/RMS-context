@@ -15,6 +15,5 @@ services:
           ipv4_address:  http://192.168.16.2
 
 networks:
-    default:
-        external:
-            name: rms_network
+  rms_network:
+    external: true
