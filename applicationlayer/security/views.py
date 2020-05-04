@@ -161,6 +161,26 @@ class CurrentUserContext(APIView):
                         status=status.HTTP_200_OK)
 
 
+class GetDestinationUrl(APIView):
+    
+    def get(self, request, *args, **kwargs):
+
+        base_url = ""
+        path = request.query_params.get('url')
+
+        token = request.headers.get("Authorization").replace("Bearer ", "")
+
+        currentSession = models.UserSession.objects.filter(token=token).first()
+
+        if currentSession:
+            base_url = currentSession.application.base_url
+        else:
+            pass
+
+        return Response(data={ "destination": base_url},
+                        status=status.HTTP_200_OK)
+
+
 class Logout(APIView):
     def post(self, request, *args, **kwargs):
         return
