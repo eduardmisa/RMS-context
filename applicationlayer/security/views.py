@@ -118,85 +118,50 @@ class CurrentUserContext(APIView):
                                                             application_id=user_context.application.id,
                                                             has_all_access=True
                                                         ).first() != None
-            user_context.application.modules = []
+            user_context.application.user_modules = []
             user_context.application.web_urls = []
             user_context.application.api_urls = []
 
-            modules = models.Module.objects.filter(
+            user_modules = models.Module.objects.filter(
+                    route_front__application__id=user_context.application.id,
+                ).values(
+                    'code',
+                    'name',
+                    'icon'
+                ).annotate(
+                    url=F('route_front__url'),
+                    parent=F('parent__code')
+                )
+
+            web_urls = models.RoutesFront.objects.filter(
                     application_id=user_context.application.id
                 ).values(
                     'code',
-                ).annotate(
-                    icon=F('front_icon'),
-                    url=F('front_url')
+                    'url',
                 )
 
-            web_urls = models.Module.objects.filter(
-                    application_id=user_context.application.id
-                ).values(
-                    'code',
-                ).annotate(
-                    icon=F('front_icon'),
-                    url=F('front_url')
-                )
-
-            api_urls = models.Endpoint.objects.filter(
+            api_urls = models.RoutesBack.objects.filter(
                     application_id=user_context.application.id
                 ).values(
                     'code',
                     'method',
                     'url'
-                )
-
-
-
-
-
-
-
-            user_context.application.client_id = request.auth.client.id
-            user_context.application.permissions = []
-            user_context.application.external_permissions = []
-            user_context.application.is_administrator = user_context.groups.filter(
-                                                            application_id=user_context.application.id,
-                                                            has_all_access=True
-                                                        ).first() != None
-
-            permission_query = models.Endpoint.objects.values(
-                    'method',
-                    'url'
-                ).annotate(
-                    permission=F('permissions__name'),
-
-                    parent_module_code=F('permissions__module__parent__code'),
-                    parent_module_name=F('permissions__module__parent__name'),
-                    parent_module_front_icon=F('permissions__module__parent__front_icon'),
-                    parent_module_front_url=F('permissions__module__parent__front_url'),
-
-                    module_code=F('permissions__module__code'),
-                    module_name=F('permissions__module__name'),
-                    module_front_icon=F('permissions__module__front_icon'),
-                    module_front_url=F('permissions__module__front_url'),
-                    app_id=F('permissions__module__application__id'),
-                )
-
-            user_context.application.permissions = permission_query.filter(
-                    permissions__module__application__id=user_context.application.id
-                )
-            user_context.application.external_permissions = permission_query.filter(
-                    permissions__module__application__clients_external_applications__id=request.auth.client.id,
                 )
 
             if not user_context.application.is_administrator and not user_context.is_superuser:
-                user_context.application.permissions = \
-                    user_context.application.permissions.filter(
-                        groups__users__id=user_context.id
-                        )
+                user_modules = user_modules.filter(
+                    route_front__permissions__groups__users__id=user_context.id
+                    )
+                web_urls = web_urls.filter(
+                    permissions__groups__users__id=user_context.id
+                    )
+                api_urls = api_urls.filter(
+                    permissions__groups__users__id=user_context.id
+                    )
 
-                user_context.application.external_permissions = \
-                    user_context.application.external_permissions.filter(
-                        groups__users__id=user_context.id
-                        )
+            user_context.application.user_modules = user_modules
+            user_context.application.web_urls = web_urls
+            user_context.application.api_urls = api_urls
 
         serializer = serializer(user_context)
 

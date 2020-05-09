@@ -31,9 +31,6 @@ class CurrentUserContextPermissionsSerializer(serializers.Serializer):
 
 
 
-
-
-
 # Current user context application MODULES
 class CurrentUserContextModulesSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=255)
@@ -46,7 +43,6 @@ class CurrentUserContextModulesSerializer(serializers.Serializer):
 # Current user context application WEB
 class CurrentUserContextApplicationWebSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=255)
-    icon = serializers.CharField(max_length=255, required=False)
     url = serializers.CharField(max_length=255, required=False)
 
 
@@ -63,7 +59,7 @@ class CurrentUserContextApplicationSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     description = serializers.CharField(max_length=255)
     is_administrator = serializers.BooleanField()
-    modules = CurrentUserContextModulesSerializer(many=True)
+    user_modules = CurrentUserContextModulesSerializer(many=True)
     web_urls = CurrentUserContextApplicationWebSerializer(many=True)
     api_urls = CurrentUserContextApplicationApiSerializer(many=True)
 
