@@ -157,6 +157,26 @@ class CurrentUserContext(APIView):
                 api_urls = api_urls.filter(
                     permissions__groups__users__id=user_context.id
                     )
+    
+            # includes missing parents
+            # ...
+            missing_parents = [] 
+            for item in user_modules:
+                if (item['parent'] and len(user_modules.filter(code=item['parent'])) <= 0 ):
+                    missing_parents.append(item['parent'])
+
+            if len(missing_parents) > 0:
+                missing_parents = list(set(missing_parents))
+                new_parents = models.Module.objects.filter(code__in=missing_parents).values(
+                        'code',
+                        'name',
+                        'icon'
+                    ).annotate(
+                        url=F('route_front__url'),
+                        parent=F('parent__code')
+                    )
+
+                user_modules = user_modules.union(new_parents)
 
             user_context.application.user_modules = user_modules
             user_context.application.web_urls = web_urls
