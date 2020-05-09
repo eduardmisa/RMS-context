@@ -18,49 +18,49 @@ from django.db.models import F, Q, Sum
 # Create your views here.
 
 class ApplicationViewSet(viewsets.ModelViewSet):
-    queryset = models.Application.objects.all().order_by('-created')
+    queryset = models.Application.objects.all().order_by('-id')
     serializer_class = ApplicationSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ApplicationFilterSet
 
 
 class RoutesFrontViewSet(viewsets.ModelViewSet):
-    queryset = models.RoutesFront.objects.all().order_by('-created')
+    queryset = models.RoutesFront.objects.all().order_by('-id')
     serializer_class = RoutesFrontSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoutesFrontFilterSet
 
 
 class RoutesBackViewSet(viewsets.ModelViewSet):
-    queryset = models.RoutesBack.objects.all().order_by('-created')
+    queryset = models.RoutesBack.objects.all().order_by('-id')
     serializer_class = RoutesBackSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoutesBackFilterSet
 
 
 class PermissionViewSet(viewsets.ModelViewSet):
-    queryset = models.Permission.objects.all().order_by('-created')
+    queryset = models.Permission.objects.all().order_by('-id')
     serializer_class = PermissionSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = PermissionFilterSet
 
 
 class ModuleViewSet(viewsets.ModelViewSet):
-    queryset = models.Module.objects.all().order_by('-created')
+    queryset = models.Module.objects.all().order_by('-id')
     serializer_class = ModuleSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ModuleFilterSet
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    queryset = models.Group.objects.all().order_by('-created')
+    queryset = models.Group.objects.all().order_by('-id')
     serializer_class = GroupSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = GroupFilterSet
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = models.User.objects.all().order_by('-created')
+    queryset = models.User.objects.all().order_by('-id')
     serializer_class = UserSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = UserFilterSet
@@ -74,7 +74,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class ClientViewSet(viewsets.ModelViewSet):
-    queryset = models.Client.objects.all().order_by('-created')
+    queryset = models.Client.objects.all().order_by('-id')
     serializer_class = ClientSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ClientFilterSet
