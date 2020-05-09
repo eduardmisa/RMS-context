@@ -14,10 +14,11 @@ class LogEntitiesEnum(Enum):
 class PrefixEnum(Enum):
     User = "USR"
     Application = "APP"
+    RoutesFront = "RTF"
+    RoutesBack = "RTB"
+    Permission = "PRM"
     Module = "MOD"
     Group = "GRP"
-    Permission = "PRM"
-    Endpoint = "EDP"
     Client = "CLI"
 
 class PremissionPrivilegeEnum(Enum):

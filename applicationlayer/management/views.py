@@ -24,18 +24,32 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     filterset_class = ApplicationFilterSet
 
 
+class RoutesFrontViewSet(viewsets.ModelViewSet):
+    queryset = models.RoutesFront.objects.all().order_by('-created')
+    serializer_class = RoutesFrontSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RoutesFrontFilterSet
+
+
+class RoutesBackViewSet(viewsets.ModelViewSet):
+    queryset = models.RoutesBack.objects.all().order_by('-created')
+    serializer_class = RoutesBackSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RoutesBackFilterSet
+
+
+class PermissionViewSet(viewsets.ModelViewSet):
+    queryset = models.Permission.objects.all().order_by('-created')
+    serializer_class = PermissionSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = PermissionFilterSet
+
+
 class ModuleViewSet(viewsets.ModelViewSet):
     queryset = models.Module.objects.all().order_by('-created')
     serializer_class = ModuleSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ModuleFilterSet
-
-
-class EndpointViewSet(viewsets.ModelViewSet):
-    queryset = models.Endpoint.objects.all().order_by('-created')
-    serializer_class = EndpointSerializer
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = EndpointFilterSet
 
 
 class GroupViewSet(viewsets.ModelViewSet):

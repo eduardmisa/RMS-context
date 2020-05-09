@@ -11,6 +11,8 @@ class LoginSerializer(serializers.Serializer):
     scope = serializers.CharField(max_length=255, required=False)
 
 
+
+
 class CurrentUserContextPermissionsSerializer(serializers.Serializer):
     parent_module_name = serializers.CharField(max_length=255, required=False)
     parent_module_code = serializers.CharField(max_length=255, required=False)
@@ -26,16 +28,47 @@ class CurrentUserContextPermissionsSerializer(serializers.Serializer):
     url = serializers.CharField(max_length=255)
 
 
+
+
+
+
+
+
+# Current user context application MODULES
+class CurrentUserContextModulesSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=255)
+    name = serializers.CharField(max_length=255)
+    icon = serializers.CharField(max_length=255, required=False)
+    url = serializers.CharField(max_length=255, required=False)
+    parent = serializers.CharField(max_length=255, required=False)
+
+
+# Current user context application WEB
+class CurrentUserContextApplicationWebSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=255)
+    icon = serializers.CharField(max_length=255, required=False)
+    url = serializers.CharField(max_length=255, required=False)
+
+
+# Current user context application API
+class CurrentUserContextApplicationApiSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=255)
+    method = serializers.CharField(max_length=255)
+    url = serializers.CharField(max_length=255)
+
+
+# Current user context APPLICATION
 class CurrentUserContextApplicationSerializer(serializers.Serializer):
     client_id = serializers.IntegerField()
     name = serializers.CharField(max_length=255)
     description = serializers.CharField(max_length=255)
     is_administrator = serializers.BooleanField()
-    permissions = CurrentUserContextPermissionsSerializer(many=True)
-    external_permissions = CurrentUserContextPermissionsSerializer(many=True)
-    
+    modules = CurrentUserContextModulesSerializer(many=True)
+    web_urls = CurrentUserContextApplicationWebSerializer(many=True)
+    api_urls = CurrentUserContextApplicationApiSerializer(many=True)
 
 
+# Current user context final response
 class CurrentUserContextSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255)
     email = serializers.CharField(max_length=255)

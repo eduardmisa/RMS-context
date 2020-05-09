@@ -41,59 +41,84 @@ class Application(BaseClass):
         db_table = 'applications'
 
 
-class Module(BaseClass):
+class RoutesFront(BaseClass):
     code = models.CharField(unique=True, blank=False, null=False, max_length=10)
-    name = models.CharField(blank=False, null=False, max_length=50)
-    description = models.CharField(max_length=100, blank=True, null=True)
-
-    front_icon = models.CharField(max_length=100, blank=True, null=True)
-    front_url = models.CharField(max_length=255, blank=True, null=True)
-
+    url = models.CharField(max_length=255, blank=True, null=True)
     application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='modules', blank=False, null=False, default=1)
-    parent = models.ForeignKey("self", on_delete=models.PROTECT, related_name='sub_modules', null=True, default=None)
 
     def __str__(self):
-        return f'{self.application.name}-{self.parent}-{self.name}'
+        return f'{self.application.name}-{self.url}'
 
     class Meta:
-        db_table = 'modules'
-        unique_together = ['name', 'application']
+        db_table = 'routes_front'
+        unique_together = ['url', 'application']
 
 
-class Endpoint(BaseClass):
+class RoutesBack(BaseClass):
     code = models.CharField(unique=True, blank=False, null=False, max_length=10)
-
     method = models.CharField(
         choices=[(tag.value, tag.value) for tag in enums.ApiMethodEnum],
         blank=False,
         null=False,
         max_length=20
     )
-
     url = models.CharField(blank=False, null=False, max_length=255)
 
-    permission = models.CharField(blank=False, null=False, max_length=255)
-
-    module = models.ForeignKey(Module, on_delete=models.PROTECT, related_name='endpoints', blank=False, null=False)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='routes_back', blank=False, null=False, default=1)
 
     def __str__(self):
-        return f'{self.permission}-[{self.method}]-{self.url}'
+        return f'{self.application.name}-[{self.method}]-{self.url}'
 
     class Meta:
-        db_table = 'endpoints'
+        db_table = 'routes_back'
         unique_together = ['method', 'url']
+        # TODO: Add application to unique together
+
+
+class Permission(BaseClass):
+    code = models.CharField(unique=True, blank=False, null=False, max_length=10)
+    name = models.CharField(blank=False, null=False, max_length=50)
+    description = models.CharField(max_length=100, blank=True, null=True)
+
+    route_front = models.ManyToManyField(RoutesFront, related_name='permissions', blank=False)
+    route_back = models.ManyToManyField(RoutesBack, related_name='permissions', blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        db_table = 'permissions'
+
+
+class Module(BaseClass):
+    code = models.CharField(unique=True, blank=False, null=False, max_length=10)
+    name = models.CharField(blank=False, null=False, max_length=50)
+    description = models.CharField(max_length=100, blank=True, null=True)
+    icon = models.CharField(max_length=100, blank=True, null=True)
+
+    parent = models.ForeignKey("self", on_delete=models.PROTECT, related_name='sub_modules', null=True, default=None)
+    route_front = models.OneToOneField(RoutesFront, on_delete=models.PROTECT, related_name='modules', blank=True, null=True, default=1)
+
+    def __str__(self):
+        if not self.parent:
+            return f'{self.name}'
+        else:
+            return f'{self.parent}-{self.name}'
+
+    class Meta:
+        db_table = 'modules'
+        unique_together = ['name', 'route_front']
+        # TODO: Add parent to unique together
 
 
 class Group(BaseClass):
     code = models.CharField(unique=True, blank=False, null=False, max_length=10)
     name = models.CharField(blank=False, null=False, max_length=50)
     description = models.CharField(max_length=100, blank=True, null=True)
-
-    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='groups', blank=False, null=False, default=1)
-
     has_all_access = models.BooleanField(default=False)
 
-    permissions = models.ManyToManyField(Endpoint, related_name='groups', blank=True)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='groups', blank=False, null=False, default=1)
+    permissions = models.ManyToManyField(Permission, related_name='groups', blank=True)
 
     def __str__(self):
         return f'{self.name}'

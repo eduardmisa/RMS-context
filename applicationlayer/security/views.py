@@ -112,6 +112,48 @@ class CurrentUserContext(APIView):
 
         if user_context.application:
 
+            # new 
+            user_context.application.client_id = request.auth.client.id
+            user_context.application.is_administrator = user_context.groups.filter(
+                                                            application_id=user_context.application.id,
+                                                            has_all_access=True
+                                                        ).first() != None
+            user_context.application.modules = []
+            user_context.application.web_urls = []
+            user_context.application.api_urls = []
+
+            modules = models.Module.objects.filter(
+                    application_id=user_context.application.id
+                ).values(
+                    'code',
+                ).annotate(
+                    icon=F('front_icon'),
+                    url=F('front_url')
+                )
+
+            web_urls = models.Module.objects.filter(
+                    application_id=user_context.application.id
+                ).values(
+                    'code',
+                ).annotate(
+                    icon=F('front_icon'),
+                    url=F('front_url')
+                )
+
+            api_urls = models.Endpoint.objects.filter(
+                    application_id=user_context.application.id
+                ).values(
+                    'code',
+                    'method',
+                    'url'
+                )
+
+
+
+
+
+
+
             user_context.application.client_id = request.auth.client.id
             user_context.application.permissions = []
             user_context.application.external_permissions = []
@@ -121,27 +163,28 @@ class CurrentUserContext(APIView):
                                                         ).first() != None
 
             permission_query = models.Endpoint.objects.values(
-                    'permission',
                     'method',
                     'url'
                 ).annotate(
-                    parent_module_code=F('module__parent__code'),
-                    parent_module_name=F('module__parent__name'),
-                    parent_module_front_icon=F('module__parent__front_icon'),
-                    parent_module_front_url=F('module__parent__front_url'),
+                    permission=F('permissions__name'),
 
-                    module_code=F('module__code'),
-                    module_name=F('module__name'),
-                    module_front_icon=F('module__front_icon'),
-                    module_front_url=F('module__front_url'),
-                    app_id=F('module__application__id'),
+                    parent_module_code=F('permissions__module__parent__code'),
+                    parent_module_name=F('permissions__module__parent__name'),
+                    parent_module_front_icon=F('permissions__module__parent__front_icon'),
+                    parent_module_front_url=F('permissions__module__parent__front_url'),
+
+                    module_code=F('permissions__module__code'),
+                    module_name=F('permissions__module__name'),
+                    module_front_icon=F('permissions__module__front_icon'),
+                    module_front_url=F('permissions__module__front_url'),
+                    app_id=F('permissions__module__application__id'),
                 )
 
             user_context.application.permissions = permission_query.filter(
-                    module__application__id=user_context.application.id
+                    permissions__module__application__id=user_context.application.id
                 )
             user_context.application.external_permissions = permission_query.filter(
-                    module__application__clients_external_applications__id=request.auth.client.id,
+                    permissions__module__application__clients_external_applications__id=request.auth.client.id,
                 )
 
             if not user_context.application.is_administrator and not user_context.is_superuser:

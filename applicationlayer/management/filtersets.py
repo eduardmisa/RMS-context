@@ -13,21 +13,31 @@ class ApplicationFilterSet(filters.FilterSet):
         model = models.Application
         fields = ('__all__')
 
+class RoutesFrontFilterSet(filters.FilterSet):
+    application = filters.CharFilter(field_name='application', method='filter_application')
+    def filter_application(self, queryset, name, value):
+        return queryset.filter(module__application__id=value)
+    class Meta:
+        model = models.RoutesFront
+        fields = ('__all__')
+
+class RoutesBackFilterSet(filters.FilterSet):
+    application = filters.CharFilter(field_name='application', method='filter_application')
+    def filter_application(self, queryset, name, value):
+        return queryset.filter(module__application__id=value)
+    class Meta:
+        model = models.RoutesBack
+        fields = ('__all__')
+
+class PermissionFilterSet(filters.FilterSet):
+    class Meta:
+        model = models.Permission
+        fields = ('__all__')
 
 class ModuleFilterSet(filters.FilterSet):
     class Meta:
         model = models.Module
         fields = ('__all__')
-
-
-class EndpointFilterSet(filters.FilterSet):
-    application = filters.CharFilter(field_name='application', method='filter_application')
-    def filter_application(self, queryset, name, value):
-        return queryset.filter(module__application__id=value)
-    class Meta:
-        model = models.Endpoint
-        fields = ('__all__')
-
 
 class GroupFilterSet(filters.FilterSet):
     applications = filters.CharFilter(field_name='applications', method='filter_application')
@@ -38,12 +48,10 @@ class GroupFilterSet(filters.FilterSet):
         model = models.Group
         fields = ('__all__')
 
-
 class UserFilterSet(filters.FilterSet):
     class Meta:
         model = models.User
         fields = ('__all__')
-
 
 class ClientFilterSet(filters.FilterSet):
     class Meta:

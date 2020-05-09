@@ -10,6 +10,44 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'createdby', 'modifiedby', 'code'
         )
 
+class RoutesFrontSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RoutesFront
+        fields = '__all__'
+        read_only_fields = (
+            'createdby', 'modifiedby', 'code'
+        )
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset = models.RoutesFront.objects.all(),
+                fields = ('url', 'application'),
+                message = "URL with this Application already exists"
+            )
+        ]
+
+class RoutesBackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RoutesBack
+        fields = '__all__'
+        read_only_fields = (
+            'createdby', 'modifiedby', 'code'
+        )
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset = models.RoutesBack.objects.all(),
+                fields = ('method', 'url'),
+                message = "Method with this URL already exists"
+            )
+        ]
+
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Permission
+        fields = '__all__'
+        read_only_fields = (
+            'createdby', 'modifiedby', 'code'
+        )
+
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Module
@@ -20,35 +58,20 @@ class ModuleSerializer(serializers.ModelSerializer):
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset = models.Module.objects.all(),
-                fields = ('name', 'application'),
-                message = "Name with this Application already exists"
+                fields = ('name', 'route_front'),
+                message = "Name with this Frontend Route already exists"
             )
         ]
-    def validate_parent (self, val):
-        if val:
-            existing_app = models.Application.objects.filter(id=self.initial_data.get('application')).first() 
-            if not existing_app:
-                raise serializers.ValidationError('Application does not exists')
+    # def validate_parent (self, val):
+    #     if val:
+    #         existing_routefront = models.RoutesFront.objects.filter(id=self.initial_data.get('route_front')).first() 
+    #         if not existing_routefront:
+    #             raise serializers.ValidationError('Frontend Route does not exists')
 
-            if val.application.id != existing_app.id:
-                raise serializers.ValidationError('Parent application does not match this application')
+    #         if val.RoutesFront.application.id != existing_routefront..id:
+    #             raise serializers.ValidationError('Parent application does not match this application')
 
-        return val
-
-class EndpointSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Endpoint
-        fields = '__all__'
-        read_only_fields = (
-            'createdby', 'modifiedby', 'code'
-        )
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset = models.Endpoint.objects.all(),
-                fields = ('method', 'url'),
-                message = "Method with this URL already exists"
-            )
-        ]
+    #     return val
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,8 +102,12 @@ class GroupSerializer(serializers.ModelSerializer):
             return []
 
         for item in permissions:
-            if item.module.application != existing_application:
-                raise serializers.ValidationError('Some items did not match the submited application')
+            for fitem in item.route_front.all():
+                if fitem.application.id != existing_application.id:
+                    raise serializers.ValidationError('Some items did not match the submited application')
+            for bitem in item.route_back.all():
+                if bitem.application.id != existing_application.id:
+                    raise serializers.ValidationError('Some items did not match the submited application')
 
         return val
 
@@ -111,7 +138,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             return []
 
         return val
-
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
