@@ -12,7 +12,7 @@ import copy
 from django.utils.crypto import get_random_string
 from middleware.security import AllowAny
 
-from applicationlayer.security.serializers import CurrentUserContextPermissionsSerializer
+from applicationlayer.security.serializers import CurrentUserContextApplicationApiSerializer
 from django.db.models import F, Q, Sum
 
 # Create your views here.
@@ -100,24 +100,16 @@ class ClientViewSet(viewsets.ModelViewSet):
             url_path='overall-access',
             name="Client service over all access")
     def OverallAccess(self, request, pk=None):
-        self.serializer_class = CurrentUserContextPermissionsSerializer
-        self.filterset_class = EndpointFilterSet
-        
-        permission_query = models.Endpoint.objects.values(
-                'permission',
-                'method',
-                'url'
-            ).annotate(
-                module_code=F('module__code'),
-                module_name=F('module__name'),
-                app_id=F('module__application__id'),
-            )
+        self.serializer_class = CurrentUserContextApplicationApiSerializer
+        self.filterset_class = RoutesBackFilterSet
+
+        permission_query = models.RoutesBack.objects
 
         self.queryset = permission_query.filter(
-                                module__application__clients_external_applications__id=pk,
+                                application__clients_external_applications__id=pk,
                             ).union(
                                     permission_query.filter(
-                                            module__application__clients__id=pk,
+                                            application__clients__id=pk,
                                         )
                                 )
         return super(ClientViewSet, self).list(request)

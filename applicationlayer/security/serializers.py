@@ -11,26 +11,6 @@ class LoginSerializer(serializers.Serializer):
     scope = serializers.CharField(max_length=255, required=False)
 
 
-
-
-class CurrentUserContextPermissionsSerializer(serializers.Serializer):
-    parent_module_name = serializers.CharField(max_length=255, required=False)
-    parent_module_code = serializers.CharField(max_length=255, required=False)
-    parent_module_front_icon = serializers.CharField(max_length=255, required=False)
-    parent_module_front_url = serializers.CharField(max_length=255, required=False)
-
-    module_code = serializers.CharField(max_length=255)
-    module_name = serializers.CharField(max_length=255)
-    module_front_icon = serializers.CharField(max_length=255, required=False)
-    module_front_url = serializers.CharField(max_length=255, required=False)
-    permission = serializers.CharField(max_length=255)
-    method = serializers.CharField(max_length=255)
-    url = serializers.CharField(max_length=255)
-
-
-
-
-
 # Current user context application MODULES
 class CurrentUserContextModulesSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=255)
