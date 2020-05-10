@@ -44,7 +44,7 @@ class Application(BaseClass):
 class RoutesFront(BaseClass):
     code = models.CharField(unique=True, blank=False, null=False, max_length=10)
     url = models.CharField(max_length=255, blank=True, null=True)
-    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='modules', blank=False, null=False, default=1)
+    application = models.ForeignKey(Application, on_delete=models.PROTECT, related_name='routes_front', blank=False, null=False, default=1)
 
     def __str__(self):
         return f'{self.application.name}-{self.url}'

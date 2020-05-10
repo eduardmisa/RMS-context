@@ -70,7 +70,7 @@ class Login(APIView):
             if not is_administrator:
                 # Verify user access:
                 # Note: endpoints === permissions
-                has_access = client.application.modules.filter(endpoints__groups__users__id=user.id).count() > 0
+                has_access = client.application.routes_front.filter(permissions__groups__users__id=user.id).count() > 0 or client.application.routes_back.filter(permissions__groups__users__id=user.id).count() > 0
                 if not has_access:
                     return Response("User access to application denied",
                                     status=status.HTTP_403_FORBIDDEN,)

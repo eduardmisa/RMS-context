@@ -26,9 +26,12 @@ class RoutesBackFilterSet(filters.FilterSet):
 class PermissionFilterSet(filters.FilterSet):
     application = filters.CharFilter(field_name='application', method='filter_application')
     def filter_application(self, queryset, name, value):
-        return queryset.filter(
+        permissions_ids =  queryset.filter(
             route_front__application__id=value
-        )
+        ).values('id')
+        permissions_ids = list(set(map(lambda row: row['id'], list(permissions_ids))))
+        return queryset.filter(id__in=permissions_ids)
+
     class Meta:
         model = models.Permission
         fields = ('__all__')
