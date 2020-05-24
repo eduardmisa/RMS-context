@@ -6,4 +6,4 @@ COPY . /code
 WORKDIR /code
 RUN pip install -r requirements.txt
 EXPOSE 8001
-RUN python manage.py migrate
+# RUN python manage.py migrate
