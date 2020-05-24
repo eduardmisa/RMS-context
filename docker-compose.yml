@@ -2,7 +2,7 @@ version: '3'
 
 services:
   rms_context_service:
-    image: rms_context_image:latest
+    image: eduardmisa/rms-context:latest
     container_name: rms_context_container
     volumes:
       - .:/rms_context_volume
