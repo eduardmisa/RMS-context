@@ -11,10 +11,10 @@ services:
     restart: always
     build: .
     command: python manage.py runserver 0.0.0.0:8001
-    networks:
-      rms_network:
-          ipv4_address:  172.18.0.2
+#     networks:
+#       rms_network:
+#           ipv4_address:  172.18.0.2
 
-networks:
-  rms_network:
-    external: true
+# networks:
+#   rms_network:
+#     external: true
