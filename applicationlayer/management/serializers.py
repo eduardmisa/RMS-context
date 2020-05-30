@@ -154,3 +154,42 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'createdby', 'modifiedby', 'code'
         )
+
+
+
+
+
+class RoutesFrontEasyCreateSerializer(serializers.Serializer):
+    id = serializers.CharField(allow_blank=False, allow_null=False)
+    url = serializers.CharField(allow_blank=False, allow_null=False)
+
+class RoutesBackEasyCreateSerializer(serializers.Serializer):
+    id = serializers.CharField(allow_blank=False, allow_null=False)
+    url = serializers.CharField(allow_blank=False, allow_null=False)
+    method = serializers.CharField(allow_blank=False, allow_null=False)
+
+class PermissionEasyCreateSerializer(serializers.Serializer):
+    id = serializers.CharField(allow_blank=False, allow_null=False)
+    name = serializers.CharField(allow_blank=False, allow_null=False)
+    description = serializers.CharField(allow_blank=True, allow_null=True)
+    routes_fronts = RoutesFrontEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
+    routes_backs = RoutesBackEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
+
+class ModuleEasyCreateSerializer(serializers.Serializer):
+    id = serializers.CharField(allow_blank=False, allow_null=False)
+    name = serializers.CharField(allow_blank=False, allow_null=False)
+    description = serializers.CharField(allow_blank=True, allow_null=True)
+    icon = serializers.CharField(allow_blank=True, allow_null=True)
+    parent = serializers.CharField(allow_blank=True, allow_null=True) # Should be name
+    routes_front = RoutesFrontEasyCreateSerializer(allow_null=False)
+
+class ApplicationEasyCreateSerializer(serializers.Serializer):
+    id = serializers.CharField(allow_blank=False, allow_null=False)
+    name = serializers.CharField()
+    description = serializers.CharField(allow_blank=True, allow_null=True)
+    base_url = serializers.CharField(allow_blank=False, allow_null=False)
+
+    routes_fronts = RoutesFrontEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
+    routes_backs = RoutesBackEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
+    permissions = PermissionEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
+    modules = ModuleEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
