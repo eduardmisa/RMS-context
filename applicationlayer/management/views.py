@@ -72,7 +72,9 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             item['routes_backs'] = models.RoutesBack.objects.filter(permissions__id=item['id']).values('id', 'url', 'method')
         app['permissions'] = perm_master
 
-        modules = models.Module.objects.filter(route_front__application__id=existing_app.id).values('id', 'name', 'description', 'icon', 'parent_id')
+        modules = models.Module.objects.filter(route_front__application__id=existing_app.id)
+        modules = modules.union(models.Module.objects.filter(sub_modules__route_front__application__id=existing_app.id))
+        modules = modules.values('id', 'name', 'description', 'icon', 'parent_id')
         for item in modules:
             item['routes_front'] = models.RoutesFront.objects.filter(modules__id=item['id']).values('id', 'url')
         app['modules'] = modules
