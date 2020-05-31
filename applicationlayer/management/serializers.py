@@ -171,14 +171,14 @@ class RoutesBackEasyCreateSerializer(serializers.Serializer):
 class PermissionEasyCreateSerializer(serializers.Serializer):
     id = serializers.CharField(allow_blank=False, allow_null=False)
     name = serializers.CharField(allow_blank=False, allow_null=False)
-    description = serializers.CharField(allow_blank=True, allow_null=True)
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     routes_fronts = RoutesFrontEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
     routes_backs = RoutesBackEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
 
 class ModuleEasyCreateSerializer(serializers.Serializer):
     id = serializers.CharField(allow_blank=False, allow_null=False)
     name = serializers.CharField(allow_blank=False, allow_null=False)
-    description = serializers.CharField(allow_blank=True, allow_null=True)
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     icon = serializers.CharField(allow_blank=True, allow_null=True)
     parent = serializers.CharField(allow_blank=True, allow_null=True) # Should be name
     routes_front = RoutesFrontEasyCreateSerializer(allow_null=False)
@@ -186,7 +186,7 @@ class ModuleEasyCreateSerializer(serializers.Serializer):
 class ApplicationEasyCreateSerializer(serializers.Serializer):
     id = serializers.CharField(allow_blank=False, allow_null=False)
     name = serializers.CharField()
-    description = serializers.CharField(allow_blank=True, allow_null=True)
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     base_url = serializers.CharField(allow_blank=False, allow_null=False)
 
     routes_fronts = RoutesFrontEasyCreateSerializer(many=True, allow_null=False, allow_empty=False)
