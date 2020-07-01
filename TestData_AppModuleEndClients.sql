@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `applications` (
 DELETE FROM `applications`;
 /*!40000 ALTER TABLE `applications` DISABLE KEYS */;
 INSERT INTO `applications` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `name`, `description`, `base_url`) VALUES
-	(1, '2020-04-10 16:25:25.736404', 'mainadmin', '2020-04-10 16:25:25.738404', 'mainadmin', 'APP-1', 'Inventory System', '', 'http://inventory.u4rdsystem.com'),
-	(2, '2020-04-10 16:25:33.813318', 'mainadmin', '2020-04-10 16:25:33.814982', 'mainadmin', 'APP-2', 'Incident Report System', '', 'http://incident-report.u4rdsystem.com');
+	(1, '2020-04-10 16:25:25.736404', 'mainadmin', '2020-04-10 16:25:25.738404', 'mainadmin', 'APP-1', 'Inventory System', '', 'http://inventory.emisa.dev'),
+	(2, '2020-04-10 16:25:33.813318', 'mainadmin', '2020-04-10 16:25:33.814982', 'mainadmin', 'APP-2', 'Incident Report System', '', 'http://incident-report.emisa.dev');
 /*!40000 ALTER TABLE `applications` ENABLE KEYS */;
 
 -- Dumping structure for table apidb.clients
