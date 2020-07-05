@@ -6,7 +6,7 @@ urlpatterns = (
     path(r'login/', views.Login.as_view(), name="API Login"),
     re_path(r'^logout/', views.Logout.as_view(), name="API Logout"),
     re_path(r'^refresh-token/(?P<token>\w+)/$', views.RefreshToken.as_view(), name="Refresh Token"),
-    
+
     path(r'current-user-context/', views.CurrentUserContext.as_view(), name="Current User"),
     path(r'destination-url/', views.GetDestinationUrl.as_view(), name="Get Destination Url"),
 

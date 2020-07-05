@@ -4,7 +4,11 @@ from rest_framework import exceptions
 from rest_framework import permissions
 from datetime import datetime, timedelta
 from django.conf import settings
+from applicationlayer.gateway import utils
+from datalayer.session_datalayer import get_current_user
+import re
 from entities import models
+
 
 
 class AppTokenAuthentication(TokenAuthentication):
@@ -31,10 +35,38 @@ class AppTokenAuthentication(TokenAuthentication):
 
 class IsAuthenticated(permissions.BasePermission):        
 
+
+    def url_regex_exact_matched (self, regex, string):
+        reg = '^' + regex + '$'
+        return True if re.match(reg, string) != None else False
+
     def has_permission(self, request, view):
-        if not request.user:
+
+        user_context = None
+
+        inputs = utils.get_request_values(request)
+
+        rms_context_allowed_urls = set(['/api/v1/auth/login/', 
+                                        '/api/v1/auth/current-user-context/'])
+
+        if inputs['client_path'] in rms_context_allowed_urls:
+            return True
+
+        user_context = get_current_user(request.user, request.auth)
+
+        if not user_context:
             return False
-        return True
+
+        if user_context.is_superuser:
+            return True
+
+        permissions = user_context.application.api_urls
+
+        return len(
+            list(filter(lambda item: self.url_regex_exact_matched(item['url'], inputs.get('client_path'))
+                                 and item['method'] == inputs.get('client_method'),
+                        permissions))
+        ) > 0
 
 
 class AllowAny(permissions.BasePermission):        
