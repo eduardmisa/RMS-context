@@ -7,18 +7,28 @@ from django.db.models import Q
 class ApplicationFilterSet(filters.FilterSet):
     groups = filters.CharFilter(field_name='groups', method='filter_application_by_groups')
     def filter_application_by_groups(self, queryset, name, value):
-        ids = value.split(',')
-        return queryset.filter(groups__id__in=ids)
+        codes = value.split(',')
+        return queryset.filter(groups__code__in=codes)
     class Meta:
         model = models.Application
         fields = ('__all__')
 
 class RoutesFrontFilterSet(filters.FilterSet):
+    application = filters.CharFilter(field_name='application', method='filter_application')
+    def filter_application(self, queryset, name, value):
+        return queryset.filter(
+            application__code=value
+        )
     class Meta:
         model = models.RoutesFront
         fields = ('__all__')
 
 class RoutesBackFilterSet(filters.FilterSet):
+    application = filters.CharFilter(field_name='application', method='filter_application')
+    def filter_application(self, queryset, name, value):
+        return queryset.filter(
+            application__code=value
+        )
     class Meta:
         model = models.RoutesBack
         fields = ('__all__')
@@ -26,11 +36,11 @@ class RoutesBackFilterSet(filters.FilterSet):
 class PermissionFilterSet(filters.FilterSet):
     application = filters.CharFilter(field_name='application', method='filter_application')
     def filter_application(self, queryset, name, value):
-        permissions_ids =  queryset.filter(
-            route_front__application__id=value
-        ).values('id')
-        permissions_ids = list(set(map(lambda row: row['id'], list(permissions_ids))))
-        return queryset.filter(id__in=permissions_ids)
+        permissions_codes =  queryset.filter(
+            route_front__application__code=value
+        ).values('code')
+        permissions_codes = list(set(map(lambda row: row['code'], list(permissions_codes))))
+        return queryset.filter(code__in=permissions_codes)
 
     class Meta:
         model = models.Permission
@@ -45,7 +55,7 @@ class GroupFilterSet(filters.FilterSet):
     applications = filters.CharFilter(field_name='applications', method='filter_application')
     def filter_application(self, queryset, name, value):
         ids = value.split(',')
-        return queryset.filter(application__in=ids)
+        return queryset.filter(application__code__in=ids)
     class Meta:
         model = models.Group
         fields = ('__all__')

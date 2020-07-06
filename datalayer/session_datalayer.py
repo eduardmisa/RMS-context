@@ -3,6 +3,7 @@ from django.db.models import F, Q, Sum
 
 
 def get_current_user(request_user, request_session):
+    
     user_context = request_user
     user_session = request_session
 

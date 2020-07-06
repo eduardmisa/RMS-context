@@ -35,19 +35,22 @@ class AppTokenAuthentication(TokenAuthentication):
 
 class IsAuthenticated(permissions.BasePermission):        
 
-
     def url_regex_exact_matched (self, regex, string):
         reg = '^' + regex + '$'
         return True if re.match(reg, string) != None else False
 
     def has_permission(self, request, view):
 
+        if not request.user and not request.auth:
+            return False
+
         user_context = None
 
         inputs = utils.get_request_values(request)
 
-        rms_context_allowed_urls = set(['/api/v1/auth/login/', 
-                                        '/api/v1/auth/current-user-context/'])
+        rms_context_allowed_urls = set([
+            '/api/v1/auth/login/', 
+            '/api/v1/auth/current-user-context/'])
 
         if inputs['client_path'] in rms_context_allowed_urls:
             return True

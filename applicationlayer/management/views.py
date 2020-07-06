@@ -8,19 +8,78 @@ from rest_framework.decorators import action
 from entities import models
 from .serializers import *
 from .filtersets import *
-import copy
 from django.utils.crypto import get_random_string
 from middleware.security import AllowAny
 from datalayer import application_datalayer
-
 from applicationlayer.security.serializers import CurrentUserContextApplicationApiSerializer
 from django.db.models import F, Q, Sum
+import copy
 
-# Create your views here.
 
-class ApplicationViewSet(viewsets.ModelViewSet):
+class CrudViewSet(viewsets.ModelViewSet):
+    list_serializer = None
+    retrieve_serializer = None
+    create_serializer = None
+    update_serializer = None
+    delete_serializer = None
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = self.list_serializer
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = self.retrieve_serializer
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        self.serializer_class = self.create_serializer
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        self.serializer_class = self.update_serializer
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        self.serializer_class = self.delete_serializer
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class ApplicationViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.Application.objects.all().order_by('-id')
-    serializer_class = ApplicationSerializer
+    list_serializer = ApplicationListSerializer
+    retrieve_serializer = ApplicationRetrieveSerializer
+    create_serializer = ApplicationCreateSerializer
+    update_serializer = ApplicationUpdateSerializer
+    delete_serializer = ApplicationDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ApplicationFilterSet
 
@@ -84,72 +143,97 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         return Response(app)
 
 
-
-
-
-class RoutesFrontViewSet(viewsets.ModelViewSet):
+class RoutesFrontViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.RoutesFront.objects.all().order_by('-id')
-    serializer_class = RoutesFrontSerializer
+    list_serializer = RoutesFrontListSerializer
+    retrieve_serializer = RoutesFrontRetrieveSerializer
+    create_serializer = RoutesFrontCreateSerializer
+    update_serializer = RoutesFrontUpdateSerializer
+    delete_serializer = RoutesFrontDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoutesFrontFilterSet
 
 
-class RoutesBackViewSet(viewsets.ModelViewSet):
+class RoutesBackViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.RoutesBack.objects.all().order_by('-id')
-    serializer_class = RoutesBackSerializer
+    list_serializer = RoutesBackListSerializer
+    retrieve_serializer = RoutesBackRetrieveSerializer
+    create_serializer = RoutesBackCreateSerializer
+    update_serializer = RoutesBackUpdateSerializer
+    delete_serializer = RoutesBackDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoutesBackFilterSet
 
 
-class PermissionViewSet(viewsets.ModelViewSet):
+class PermissionViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.Permission.objects.all().order_by('-id')
-    serializer_class = PermissionSerializer
+    list_serializer = PermissionListSerializer
+    retrieve_serializer = PermissionRetrieveSerializer
+    create_serializer = PermissionCreateSerializer
+    update_serializer = PermissionUpdateSerializer
+    delete_serializer = PermissionDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = PermissionFilterSet
 
 
-class ModuleViewSet(viewsets.ModelViewSet):
+class ModuleViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.Module.objects.all().order_by('-id')
-    serializer_class = ModuleSerializer
+    list_serializer = ModuleListSerializer
+    retrieve_serializer = ModuleRetrieveSerializer
+    create_serializer = ModuleCreateSerializer
+    update_serializer = ModuleUpdateSerializer
+    delete_serializer = ModuleDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ModuleFilterSet
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class GroupViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.Group.objects.all().order_by('-id')
-    serializer_class = GroupSerializer
+    list_serializer = GroupListSerializer
+    retrieve_serializer = GroupRetrieveSerializer
+    create_serializer = GroupCreateSerializer
+    update_serializer = GroupUpdateSerializer
+    delete_serializer = GroupDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = GroupFilterSet
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.User.objects.all().order_by('-id')
-    serializer_class = UserSerializer
+    list_serializer = UserListSerializer
+    retrieve_serializer = UserRetrieveSerializer
+    create_serializer = UserCreateSerializer
+    update_serializer = UserUpdateSerializer
+    delete_serializer = UserDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = UserFilterSet
 
-    def update(self, request, *args, **kwargs):
-        self.serializer_class = UserUpdateSerializer
-        super(UserViewSet, self).update(request, *args, **kwargs)
-        instance = models.User.objects.get(id=kwargs['pk'])
-        serializer = UserSerializer(instance)
-        return Response(serializer.data)
 
-
-class ClientViewSet(viewsets.ModelViewSet):
+class ClientViewSet(CrudViewSet):
+    lookup_field = 'code'
     queryset = models.Client.objects.all().order_by('-id')
-    serializer_class = ClientSerializer
+    list_serializer = ClientListSerializer
+    retrieve_serializer = ClientRetrieveSerializer
+    create_serializer = ClientCreateSerializer
+    update_serializer = ClientUpdateSerializer
+    delete_serializer = ClientDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ClientFilterSet
 
     def create(self, request, *args, **kwargs):
-        self.serializer_class = ClientCreateSerializer
+        self.serializer_class = self.create_serializer
 
         data = copy.deepcopy(request.data)
 
         data['clid'] = get_random_string(length=32)
         data['clsc'] = get_random_string(length=32)
-
+        
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

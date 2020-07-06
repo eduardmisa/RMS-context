@@ -20,5 +20,5 @@ from applicationlayer.gateway import views
 urlpatterns = [
     path('api/v1/auth/', include('applicationlayer.security.urls')),
     path('api/v1/management/', include('applicationlayer.management.urls')),
-    re_path(r'$', views.EntryPoint.as_view(), name="API Entrypoint"),
+    # re_path(r'$', views.EntryPoint.as_view(), name="API Entrypoint"),
 ]

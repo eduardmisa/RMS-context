@@ -31,7 +31,6 @@ class Application(BaseClass):
     code = models.CharField(unique=True, blank=False, null=False, max_length=10)
     name = models.CharField(unique=True, blank=False, null=False, max_length=50)
     description = models.CharField(max_length=100, blank=True, null=True)
-
     base_url = models.CharField(unique=True, blank=False, null=False, max_length=255)
 
     def __str__(self):
