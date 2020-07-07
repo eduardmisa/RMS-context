@@ -75,59 +75,59 @@ INSERT INTO `routes_front` (`created`, `createdby`, `modified`, `modifiedby`, `c
 # .......
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-1', 'GET', '/api/v1/management/applications/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-2', 'GET', '/api/v1/management/applications/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-2', 'GET', '/api/v1/management/applications/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-3', 'POST', '/api/v1/management/applications/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-4', 'PUT', '/api/v1/management/applications/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-5', 'DELETE', '/api/v1/management/applications/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-4', 'PUT', '/api/v1/management/applications/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-5', 'DELETE', '/api/v1/management/applications/[A-Za-z\d-]+/', 1);
 
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-6', 'GET', '/api/v1/management/routes-front/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-7', 'GET', '/api/v1/management/routes-front/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-7', 'GET', '/api/v1/management/routes-front/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-8', 'POST', '/api/v1/management/routes-front/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-9', 'PUT', '/api/v1/management/routes-front/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-10', 'DELETE', '/api/v1/management/routes-front/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-9', 'PUT', '/api/v1/management/routes-front/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-10', 'DELETE', '/api/v1/management/routes-front/[A-Za-z\d-]+/', 1);
 
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-11', 'GET', '/api/v1/management/routes-back/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-12', 'GET', '/api/v1/management/routes-back/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-12', 'GET', '/api/v1/management/routes-back/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-13', 'POST', '/api/v1/management/routes-back/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-14', 'PUT', '/api/v1/management/routes-back/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-15', 'DELETE', '/api/v1/management/routes-back/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-14', 'PUT', '/api/v1/management/routes-back/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-15', 'DELETE', '/api/v1/management/routes-back/[A-Za-z\d-]+/', 1);
 
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-16', 'GET', '/api/v1/management/permissions/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-17', 'GET', '/api/v1/management/permissions/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-17', 'GET', '/api/v1/management/permissions/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-18', 'POST', '/api/v1/management/permissions/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-19', 'PUT', '/api/v1/management/permissions/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-20', 'DELETE', '/api/v1/management/permissions/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-19', 'PUT', '/api/v1/management/permissions/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-20', 'DELETE', '/api/v1/management/permissions/[A-Za-z\d-]+/', 1);
 
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-21', 'GET', '/api/v1/management/modules/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-22', 'GET', '/api/v1/management/modules/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-22', 'GET', '/api/v1/management/modules/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-23', 'POST', '/api/v1/management/modules/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-24', 'PUT', '/api/v1/management/modules/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-25', 'DELETE', '/api/v1/management/modules/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-24', 'PUT', '/api/v1/management/modules/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-25', 'DELETE', '/api/v1/management/modules/[A-Za-z\d-]+/', 1);
 
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-26', 'GET', '/api/v1/management/groups/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-27', 'GET', '/api/v1/management/groups/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-27', 'GET', '/api/v1/management/groups/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-28', 'POST', '/api/v1/management/groups/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-29', 'PUT', '/api/v1/management/groups/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-30', 'DELETE', '/api/v1/management/groups/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-29', 'PUT', '/api/v1/management/groups/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-30', 'DELETE', '/api/v1/management/groups/[A-Za-z\d-]+/', 1);
 
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-31', 'GET', '/api/v1/management/users/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-32', 'GET', '/api/v1/management/users/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-32', 'GET', '/api/v1/management/users/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-33', 'POST', '/api/v1/management/users/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-34', 'PUT', '/api/v1/management/users/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-35', 'DELETE', '/api/v1/management/users/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-34', 'PUT', '/api/v1/management/users/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-35', 'DELETE', '/api/v1/management/users/[A-Za-z\d-]+/', 1);
 
 INSERT INTO `routes_back` (`created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
 	('2020-05-09 20:36:49.616760', 'superuser', '2020-05-09 20:36:49.617820', 'superuser', 'RTB-36', 'GET', '/api/v1/management/clients/', 1),
-	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-37', 'GET', '/api/v1/management/clients/[0-9]+/', 1),
+	('2020-05-09 20:36:53.217305', 'superuser', '2020-05-09 20:36:53.218301', 'superuser', 'RTB-37', 'GET', '/api/v1/management/clients/[A-Za-z\d-]+/', 1),
 	('2020-05-09 20:37:00.556386', 'superuser', '2020-05-09 20:37:00.558386', 'superuser', 'RTB-38', 'POST', '/api/v1/management/clients/', 1),
-	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-39', 'PUT', '/api/v1/management/clients/[0-9]+/', 1),
-	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-40', 'DELETE', '/api/v1/management/clients/[0-9]+/', 1);
+	('2020-05-09 20:37:06.088547', 'superuser', '2020-05-09 20:37:06.089550', 'superuser', 'RTB-39', 'PUT', '/api/v1/management/clients/[A-Za-z\d-]+/', 1),
+	('2020-05-09 20:37:09.457264', 'superuser', '2020-05-09 20:37:09.458263', 'superuser', 'RTB-40', 'DELETE', '/api/v1/management/clients/[A-Za-z\d-]+/', 1);
 
 # modules
 # .......
