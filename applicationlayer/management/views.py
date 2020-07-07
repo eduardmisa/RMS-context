@@ -23,6 +23,14 @@ class CrudViewSet(viewsets.ModelViewSet):
     update_serializer = None
     delete_serializer = None
 
+    @action(detail=False,
+            methods=['get'],
+            url_path='count-all',
+            name="Retrieves current total record count")
+    def count_all(self, request, pk=None):
+        queryset = self.filter_queryset(self.get_queryset())
+        return Response({"count":queryset.count()})
+
     def list(self, request, *args, **kwargs):
         self.serializer_class = self.list_serializer
         queryset = self.filter_queryset(self.get_queryset())
@@ -87,7 +95,7 @@ class ApplicationViewSet(CrudViewSet):
             methods=['post'],
             url_path='easy-create',
             name="Batch operation for creating App")
-    def EasyCreate(self, request, pk=None):
+    def easy_create(self, request, pk=None):
         self.serializer_class = ApplicationEasyCreateSerializer
         serializer = self.get_serializer(data=request.data)
 
@@ -110,7 +118,7 @@ class ApplicationViewSet(CrudViewSet):
             methods=['get'],
             url_path='easy-view',
             name="Full App information")
-    def EasyView(self, request, pk=None):
+    def easy_view(self, request, pk=None):
         self.serializer_class = ApplicationEasyCreateSerializer
         existing_app = self.get_object()
 
