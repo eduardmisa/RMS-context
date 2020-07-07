@@ -64,10 +64,12 @@ class IsAuthenticated(permissions.BasePermission):
             return True
 
         permissions = user_context.application.api_urls
+        client_path = inputs.get('client_path')
+        client_method = inputs.get('client_method')
 
         return len(
-            list(filter(lambda item: self.url_regex_exact_matched(item['url'], inputs.get('client_path'))
-                                 and item['method'] == inputs.get('client_method'),
+            list(filter(lambda item: self.url_regex_exact_matched(item['url'], client_path)
+                                 and item['method'] == client_method,
                         permissions))
         ) > 0
 

@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `applications` (
   UNIQUE KEY `base_url` (`base_url`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.applications: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.applications: ~1 rows (approximately)
 DELETE FROM `applications`;
 /*!40000 ALTER TABLE `applications` DISABLE KEYS */;
 INSERT INTO `applications` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `name`, `description`, `base_url`) VALUES
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   CONSTRAINT `clients_application_id_f9ce4e58_fk_applications_id` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.clients: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.clients: ~1 rows (approximately)
 DELETE FROM `clients`;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
 INSERT INTO `clients` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `name`, `description`, `clid`, `clsc`, `valid_until`, `application_id`) VALUES
@@ -147,11 +147,13 @@ CREATE TABLE IF NOT EXISTS `groups` (
   UNIQUE KEY `groups_name_application_id_f6129205_uniq` (`name`,`application_id`),
   KEY `groups_application_id_5e31609a_fk_applications_id` (`application_id`),
   CONSTRAINT `groups_application_id_5e31609a_fk_applications_id` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.groups: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.groups: ~1 rows (approximately)
 DELETE FROM `groups`;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `name`, `description`, `has_all_access`, `application_id`) VALUES
+	(1, '2020-07-07 12:49:23.686285', 'superuser', '2020-07-07 13:15:47.322885', 'superuser', 'GRP-1', 'Demo RO Group', NULL, 0, 1);
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 
 -- Dumping structure for table rms_context_db.groups_permissions
@@ -165,11 +167,28 @@ CREATE TABLE IF NOT EXISTS `groups_permissions` (
   KEY `groups_permissions_permission_id_36f619fe_fk_permissions_id` (`permission_id`),
   CONSTRAINT `groups_permissions_group_id_a03c8909_fk_groups_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `groups_permissions_permission_id_36f619fe_fk_permissions_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.groups_permissions: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.groups_permissions: ~2 rows (approximately)
 DELETE FROM `groups_permissions`;
 /*!40000 ALTER TABLE `groups_permissions` DISABLE KEYS */;
+INSERT INTO `groups_permissions` (`id`, `group_id`, `permission_id`) VALUES
+	(1, 1, 1),
+	(2, 1, 2),
+	(6, 1, 6),
+	(7, 1, 7),
+	(8, 1, 11),
+	(9, 1, 12),
+	(10, 1, 16),
+	(11, 1, 17),
+	(12, 1, 21),
+	(13, 1, 22),
+	(14, 1, 26),
+	(15, 1, 27),
+	(16, 1, 31),
+	(3, 1, 32),
+	(4, 1, 36),
+	(5, 1, 37);
 /*!40000 ALTER TABLE `groups_permissions` ENABLE KEYS */;
 
 -- Dumping structure for table rms_context_db.modules
@@ -195,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `modules` (
   CONSTRAINT `modules_route_front_id_c3b363f8_fk_routes_front_id` FOREIGN KEY (`route_front_id`) REFERENCES `routes_front` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.modules: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.modules: ~24 rows (approximately)
 DELETE FROM `modules`;
 /*!40000 ALTER TABLE `modules` DISABLE KEYS */;
 INSERT INTO `modules` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `name`, `description`, `icon`, `parent_id`, `route_front_id`) VALUES
@@ -240,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.permissions: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.permissions: ~40 rows (approximately)
 DELETE FROM `permissions`;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
 INSERT INTO `permissions` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `name`, `description`) VALUES
@@ -299,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `permissions_route_back` (
   CONSTRAINT `permissions_route_back_routesback_id_1d92f7f7_fk_routes_back_id` FOREIGN KEY (`routesback_id`) REFERENCES `routes_back` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.permissions_route_back: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.permissions_route_back: ~55 rows (approximately)
 DELETE FROM `permissions_route_back`;
 /*!40000 ALTER TABLE `permissions_route_back` DISABLE KEYS */;
 INSERT INTO `permissions_route_back` (`id`, `permission_id`, `routesback_id`) VALUES
@@ -373,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `permissions_route_front` (
   CONSTRAINT `permissions_route_front_permission_id_732247b1_fk_permissions_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.permissions_route_front: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.permissions_route_front: ~40 rows (approximately)
 DELETE FROM `permissions_route_front`;
 /*!40000 ALTER TABLE `permissions_route_front` DISABLE KEYS */;
 INSERT INTO `permissions_route_front` (`id`, `permission_id`, `routesfront_id`) VALUES
@@ -438,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `routes_back` (
   CONSTRAINT `routes_back_application_id_84803744_fk_applications_id` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.routes_back: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.routes_back: ~40 rows (approximately)
 DELETE FROM `routes_back`;
 /*!40000 ALTER TABLE `routes_back` DISABLE KEYS */;
 INSERT INTO `routes_back` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `method`, `url`, `application_id`) VALUES
@@ -502,7 +521,7 @@ CREATE TABLE IF NOT EXISTS `routes_front` (
   CONSTRAINT `routes_front_application_id_6fe9661d_fk_applications_id` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.routes_front: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.routes_front: ~40 rows (approximately)
 DELETE FROM `routes_front`;
 /*!40000 ALTER TABLE `routes_front` DISABLE KEYS */;
 INSERT INTO `routes_front` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `url`, `application_id`) VALUES
@@ -573,13 +592,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `password` (`password`),
   UNIQUE KEY `password_salt` (`password_salt`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.users: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.users: ~2 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `code`, `username`, `password`, `password_salt`, `email`, `firstname`, `middlename`, `lastname`, `birthdate`, `is_active`, `is_superuser`) VALUES
-	(1, '2020-04-05 08:54:35.000000', 'system', '2020-04-05 08:54:39.000000', 'system', 'USR-1', 'superuser', '$2y$12$y8wYqI.08nV1/FEP5MXAB.2fki2wcjin8ORBHS27XznyAQ6QvVu4q', 'NONE', 'eduardo@tirsolutions.com', 'Eduard', 'Arriba', 'Misa', '1995-07-27', 1, 1);
+	(1, '2020-04-05 08:54:35.000000', 'system', '2020-04-05 08:54:39.000000', 'system', 'USR-1', 'superuser', '$2y$12$y8wYqI.08nV1/FEP5MXAB.2fki2wcjin8ORBHS27XznyAQ6QvVu4q', 'NONE', 'eduardo@tirsolutions.com', 'Eduard', 'Arriba', 'Misa', '1995-07-27', 1, 1),
+	(2, '2020-07-07 12:50:01.729390', 'superuser', '2020-07-07 12:50:01.993090', 'superuser', 'USR-2', 'demo_user', '$2b$12$uh0qglKFcN7.k7EQWvkhwO5.AHLH9xYa9nAD2MFhYsHjP7mw7QkxW', '$2b$12$uh0qglKFcN7.k7EQWvkhwO', 'demo_user@mail.com', 'Demo', 'User', 'Smith', '2020-07-07', 1, 0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Dumping structure for table rms_context_db.users_groups
@@ -593,11 +613,13 @@ CREATE TABLE IF NOT EXISTS `users_groups` (
   KEY `users_groups_group_id_2f3517aa_fk_groups_id` (`group_id`),
   CONSTRAINT `users_groups_group_id_2f3517aa_fk_groups_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `users_groups_user_id_f500bee5_fk_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.users_groups: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.users_groups: ~1 rows (approximately)
 DELETE FROM `users_groups`;
 /*!40000 ALTER TABLE `users_groups` DISABLE KEYS */;
+INSERT INTO `users_groups` (`id`, `user_id`, `group_id`) VALUES
+	(1, 2, 1);
 /*!40000 ALTER TABLE `users_groups` ENABLE KEYS */;
 
 -- Dumping structure for table rms_context_db.user_sessions
@@ -620,11 +642,14 @@ CREATE TABLE IF NOT EXISTS `user_sessions` (
   CONSTRAINT `user_sessions_application_id_53667350_fk_applications_id` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`),
   CONSTRAINT `user_sessions_client_id_593cbca3_fk_clients_id` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`),
   CONSTRAINT `user_sessions_user_id_43ce9642_fk_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Dumping data for table rms_context_db.user_sessions: ~0 rows (approximately)
+-- Dumping data for table rms_context_db.user_sessions: ~2 rows (approximately)
 DELETE FROM `user_sessions`;
 /*!40000 ALTER TABLE `user_sessions` DISABLE KEYS */;
+INSERT INTO `user_sessions` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `token`, `expires`, `application_id`, `client_id`, `user_id`) VALUES
+	(1, '2020-07-07 12:48:31.774475', '', '2020-07-07 13:15:48.863546', '', 'N44pUIIWdJOGQtq0smKng8iM85v6xAzd', '2020-07-07 14:15:48.862549', 1, 1, 1),
+	(2, '2020-07-07 12:50:23.224564', '', '2020-07-07 13:17:17.842318', '', 'AJE7AWOxZ6c2TiB4DorGJyjKPusT5H8B', '2020-07-07 14:17:17.842318', 1, 1, 2);
 /*!40000 ALTER TABLE `user_sessions` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
