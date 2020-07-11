@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from applicationlayer.gateway import views
+from application_layer.gateway import views
 
 urlpatterns = [
-    path('api/v1/auth/', include('applicationlayer.security.urls')),
-    path('api/v1/management/', include('applicationlayer.management.urls')),
+    path('api/v1/auth/', include('application_layer.security.urls')),
+    path('api/v1/management/', include('application_layer.management.urls')),
     # re_path(r'$', views.EntryPoint.as_view(), name="API Entrypoint"),
 ]

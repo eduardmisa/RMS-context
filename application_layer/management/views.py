@@ -10,8 +10,8 @@ from .serializers import *
 from .filtersets import *
 from django.utils.crypto import get_random_string
 from middleware.security import AllowAny
-from datalayer import application_datalayer
-from applicationlayer.security.serializers import CurrentUserContextApplicationApiSerializer
+from data_layer import application_data_layer
+from application_layer.security.serializers import CurrentUserContextApplicationApiSerializer
 from django.db.models import F, Q, Sum
 import copy
 
@@ -80,100 +80,27 @@ class CrudViewSet(viewsets.ModelViewSet):
 
 
 
-class ApplicationViewSet(CrudViewSet):
+class ServiceViewSet(CrudViewSet):
     lookup_field = 'code'
-    queryset = models.Application.objects.all().order_by('-id')
-    list_serializer = ApplicationListSerializer
-    retrieve_serializer = ApplicationRetrieveSerializer
-    create_serializer = ApplicationCreateSerializer
-    update_serializer = ApplicationUpdateSerializer
-    delete_serializer = ApplicationDeleteSerializer
+    queryset = models.Service.objects.all().order_by('-id')
+    list_serializer = ServiceListSerializer
+    retrieve_serializer = ServiceRetrieveSerializer
+    create_serializer = ServiceCreateSerializer
+    update_serializer = ServiceUpdateSerializer
+    delete_serializer = ServiceDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = ApplicationFilterSet
+    filterset_class = ServiceFilterSet
 
-    @action(detail=False,
-            methods=['post'],
-            url_path='easy-create',
-            name="Batch operation for creating App")
-    def easy_create(self, request, pk=None):
-        self.serializer_class = ApplicationEasyCreateSerializer
-        serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid():
-            success, msg = application_datalayer.easy_create(
-                copy.deepcopy(serializer.validated_data),
-                request.user)
-
-            if success:
-                headers = self.get_success_headers(serializer.data)
-                return Response({ "transaction": msg },
-                                status=status.HTTP_201_CREATED,
-                                headers=headers)
-            else:
-                return Response(msg, status=400)
-        else:
-            serializer.is_valid(raise_exception=True)
-
-    @action(detail=True,
-            methods=['get'],
-            url_path='easy-view',
-            name="Full App information")
-    def easy_view(self, request, pk=None):
-        self.serializer_class = ApplicationEasyCreateSerializer
-        existing_app = self.get_object()
-
-        app = {}
-        app['guid'] = existing_app.code
-        app['name'] = existing_app.name
-        app['description'] = existing_app.description
-        app['base_url'] = existing_app.base_url
-
-        app['routes_fronts'] = existing_app.routes_front.values('id', 'url')
-        app['routes_backs'] = existing_app.routes_back.values('id', 'url', 'method')
-
-        perm_fronts = models.Permission.objects.filter(route_front__application__id=existing_app.id).values('id', 'name', 'description')
-        perm_backs = models.Permission.objects.filter(route_back__application__id=existing_app.id).values('id', 'name', 'description')
-        perm_master = perm_fronts.union(perm_backs)
-        for item in perm_master:
-            item['routes_fronts'] = models.RoutesFront.objects.filter(permissions__id=item['id']).values('id', 'url')
-            item['routes_backs'] = models.RoutesBack.objects.filter(permissions__id=item['id']).values('id', 'url', 'method')
-        app['permissions'] = perm_master
-
-        modules = models.Module.objects.filter(route_front__application__id=existing_app.id)
-        modules = modules.union(models.Module.objects.filter(sub_modules__route_front__application__id=existing_app.id))
-        modules = modules.values('id', 'name', 'description', 'icon', 'parent_id')
-        for item in modules:
-            item['routes_front'] = models.RoutesFront.objects.filter(modules__id=item['id']).values('id', 'url')
-        app['modules'] = modules
-
-        # instance = self.get_object()
-        # serializer = self.get_serializer(app)
-        return Response(app)
-
-
-class RoutesFrontViewSet(CrudViewSet):
+class ServiceRouteViewSet(CrudViewSet):
     lookup_field = 'code'
-    queryset = models.RoutesFront.objects.all().order_by('-id')
-    list_serializer = RoutesFrontListSerializer
-    retrieve_serializer = RoutesFrontRetrieveSerializer
-    create_serializer = RoutesFrontCreateSerializer
-    update_serializer = RoutesFrontUpdateSerializer
-    delete_serializer = RoutesFrontDeleteSerializer
+    queryset = models.ServiceRoute.objects.all().order_by('-id')
+    list_serializer = ServiceRouteListSerializer
+    retrieve_serializer = ServiceRouteRetrieveSerializer
+    create_serializer = ServiceRouteCreateSerializer
+    update_serializer = ServiceRouteUpdateSerializer
+    delete_serializer = ServiceRouteDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = RoutesFrontFilterSet
-
-
-class RoutesBackViewSet(CrudViewSet):
-    lookup_field = 'code'
-    queryset = models.RoutesBack.objects.all().order_by('-id')
-    list_serializer = RoutesBackListSerializer
-    retrieve_serializer = RoutesBackRetrieveSerializer
-    create_serializer = RoutesBackCreateSerializer
-    update_serializer = RoutesBackUpdateSerializer
-    delete_serializer = RoutesBackDeleteSerializer
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = RoutesBackFilterSet
-
+    filterset_class = ServiceRouteFilterSet
 
 class PermissionViewSet(CrudViewSet):
     lookup_field = 'code'
@@ -186,7 +113,6 @@ class PermissionViewSet(CrudViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = PermissionFilterSet
 
-
 class ModuleViewSet(CrudViewSet):
     lookup_field = 'code'
     queryset = models.Module.objects.all().order_by('-id')
@@ -197,7 +123,6 @@ class ModuleViewSet(CrudViewSet):
     delete_serializer = ModuleDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ModuleFilterSet
-
 
 class GroupViewSet(CrudViewSet):
     lookup_field = 'code'
@@ -210,7 +135,6 @@ class GroupViewSet(CrudViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = GroupFilterSet
 
-
 class UserViewSet(CrudViewSet):
     lookup_field = 'code'
     queryset = models.User.objects.all().order_by('-id')
@@ -221,7 +145,6 @@ class UserViewSet(CrudViewSet):
     delete_serializer = UserDeleteSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = UserFilterSet
-
 
 class ClientViewSet(CrudViewSet):
     lookup_field = 'code'
@@ -268,4 +191,3 @@ class ClientViewSet(CrudViewSet):
                                         )
                                 )
         return super(ClientViewSet, self).list(request)
-

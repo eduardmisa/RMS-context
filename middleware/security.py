@@ -4,8 +4,8 @@ from rest_framework import exceptions
 from rest_framework import permissions
 from datetime import datetime, timedelta
 from django.conf import settings
-from applicationlayer.gateway import utils
-from datalayer.session_datalayer import get_current_user
+from application_layer.gateway import utils
+from data_layer.session_data_layer import get_current_user
 import re
 from entities import models
 
@@ -63,7 +63,7 @@ class IsAuthenticated(permissions.BasePermission):
         if user_context.is_superuser:
             return True
 
-        permissions = user_context.application.api_urls
+        permissions = user_context.service.api_urls
         client_path = inputs.get('client_path')
         client_method = inputs.get('client_method')
 

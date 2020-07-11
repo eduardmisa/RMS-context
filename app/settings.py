@@ -47,8 +47,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
 
-    'applicationlayer',
-    'datalayer',
+    'application_layer',
+    'data_layer',
     'entities'
 ]
 
@@ -133,7 +133,7 @@ REST_FRAMEWORK = {
         'middleware.security.AppTokenAuthentication'
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_PAGINATION_CLASS': 'applicationlayer.paginator.SimplePageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'application_layer.paginator.SimplePageNumberPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'UNAUTHENTICATED_USER': None

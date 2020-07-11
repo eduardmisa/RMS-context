@@ -54,4 +54,4 @@ class CurrentUserContextSerializer(serializers.Serializer):
     birthdate = serializers.CharField(max_length=255)
     group = serializers.ListField()
     is_superuser = serializers.BooleanField()
-    application = CurrentUserContextApplicationSerializer()
+    # application = CurrentUserContextApplicationSerializer()

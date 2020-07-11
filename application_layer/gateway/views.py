@@ -6,21 +6,21 @@ from django.shortcuts import render
 from django.db.models import F, Q, Sum
 from django.utils.crypto import get_random_string
 from datetime import datetime, timedelta
-from applicationlayer.gateway import utils
+from application_layer.gateway import utils
 from django.conf import settings
 import bcrypt
 import copy
 import requests
 import json
-# from requests import Request, Session
 
 
 class EntryPoint(APIView):
-    http_method_names = ['get',
-                         'post',
-                         'put',
-                         'patch',
-                         'delete']
+    http_method_names=[
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete']
 
     def get_request_headers(self, request):
         token = None
@@ -92,4 +92,3 @@ class EntryPoint(APIView):
                 headers=self.get_request_headers(request)
             )
         )
-

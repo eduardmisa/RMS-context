@@ -13,9 +13,8 @@ class LogEntitiesEnum(Enum):
 # e.g models.User >>> User
 class PrefixEnum(Enum):
     User = "USR"
-    Application = "APP"
-    RoutesFront = "RTF"
-    RoutesBack = "RTB"
+    Service = "SVC"
+    ServiceRoute = "SVR"
     Permission = "PRM"
     Module = "MOD"
     Group = "GRP"

@@ -6,9 +6,8 @@ from .views import *
 
 router = routers.DefaultRouter()
 
-router.register(r'applications', ApplicationViewSet)
-router.register(r'routes-front', RoutesFrontViewSet)
-router.register(r'routes-back', RoutesBackViewSet)
+router.register(r'services', ServiceViewSet)
+router.register(r'service-routes', ServiceRouteViewSet)
 router.register(r'permissions', PermissionViewSet)
 router.register(r'modules', ModuleViewSet)
 router.register(r'groups', GroupViewSet)

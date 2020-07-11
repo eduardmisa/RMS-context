@@ -8,7 +8,7 @@ from django.db.models import F, Q, Sum
 from .serializers import *
 from django.utils.crypto import get_random_string
 from datetime import datetime, timedelta
-from datalayer.session_datalayer import get_current_user
+from data_layer.session_data_layer import get_current_user
 import bcrypt
 
 
@@ -27,60 +27,71 @@ class Login(APIView):
 
         # Validate user access
         user = models.User.objects.filter(username=username).first()
-        app = models.Application.objects.filter(code=scope).first()
+        service = models.Service.objects.filter(code=scope).first()
         new_token = get_random_string(length=32)
         expires = datetime.now() + timedelta(hours=1)
 
         if not user:
-            return Response("Invalid username or password",
-                            status=status.HTTP_401_UNAUTHORIZED,)
+            return Response(
+                "Invalid username or password",
+                status=status.HTTP_401_UNAUTHORIZED,)
 
-        if not bcrypt.checkpw(password.encode('utf-8'), user.password.encode()):
-            return Response("Invalid username or password",
-                            status=status.HTTP_401_UNAUTHORIZED,)
+        if not bcrypt.checkpw(password.encode('utf-8'),
+                user.password.encode()):
+            return Response(
+                "Invalid username or password",
+                status=status.HTTP_401_UNAUTHORIZED,)
 
-        if not app:
-            return Response("Application Scope doesn't exists",
-                            status=status.HTTP_403_FORBIDDEN,)
+        if not service:
+            return Response(
+                "Service Scope doesn't exists",
+                status=status.HTTP_403_FORBIDDEN,)
 
-        # Verify client application access
-        client = models.Client.objects.filter(clid=client_id,
-                                              clsc=client_secret).first()
+        # Verify client service access
+        client = models.Client.objects.filter(
+            clid=client_id,
+            clsc=client_secret).first()
         if not client:
-            return Response("Client ID or Client Secret does not exists",
-                            status=status.HTTP_403_FORBIDDEN,)
+            return Response(
+                "Client ID or Client Secret does not exists",
+                status=status.HTTP_403_FORBIDDEN,)
         if client.valid_until < datetime.today().date():
-            return Response("Client access expired",
-                            status=status.HTTP_403_FORBIDDEN,)
+            return Response(
+                "Client access expired",
+                status=status.HTTP_403_FORBIDDEN,)
 
-        if client.application.id != app.id:
-            return Response("App scope does not match with the client Secret ang Id",
-                            status=status.HTTP_403_FORBIDDEN,)
+        if client.service.id != service.id:
+            return Response(
+                "Service scope does not match with the client Secret ang Id",
+                status=status.HTTP_403_FORBIDDEN,)
 
         # Superuser should not be limited
-        # to any applciations and its modules
+        # to any services and its modules
         if not user.is_superuser:
 
             # Having atleast 1 group that has "has_all_access=True"
-            # determines if this user is Administrator of this application.
+            # determines if this user is Administrator of this service.
             # Which should not be limited 
-            # to any access inside assigned application's modules
-            is_administrator = user.groups.filter(application_id=app.id, 
-                                                  has_all_access=True).first()
+            # to any access inside assigned service's modules
+            is_administrator = user.groups.filter(
+                service_id=service.id, 
+                has_all_access=True).first()
             
             if not is_administrator:
                 # Verify user access:
                 # Note: endpoints === permissions
-                has_access = client.application.routes_front.filter(permissions__groups__users__id=user.id).count() > 0 or client.application.routes_back.filter(permissions__groups__users__id=user.id).count() > 0
+                has_access = client.service.routes_front.filter(
+                    permissions__groups__users__id=user.id).count() > 0 \
+                 or client.service.routes_back.filter(
+                     permissions__groups__users__id=user.id).count() > 0
                 if not has_access:
-                    return Response("User access to application denied",
+                    return Response("User access to service denied",
                                     status=status.HTTP_403_FORBIDDEN,)
 
         usersession = models.UserSession.objects.filter(
-                user_id=user.id,
-                application_id=app.id,
-                client_id=client.id
-            ).first()
+            user_id=user.id,
+            service_id=service.id,
+            client_id=client.id).first()
 
         if usersession:
             # usersession.delete()
@@ -88,11 +99,12 @@ class Login(APIView):
             usersession.save()
             new_token = usersession.token
         else:
-            obj = models.UserSession(user=user,
-                                    application=app,
-                                    client=client,
-                                    token=new_token,
-                                    expires=expires).save()
+            obj = models.UserSession(
+                user=user,
+                service=service,
+                client=client,
+                token=new_token,
+                expires=expires).save()
         return Response({
             'access_token': new_token,
             # 'refresh_token': obj.refresh_token,
@@ -126,7 +138,7 @@ class GetDestinationUrl(APIView):
         currentSession = models.UserSession.objects.filter(token=token).first()
 
         if currentSession:
-            base_url = currentSession.application.base_url
+            base_url = currentSession.service.base_url
         else:
             pass
 

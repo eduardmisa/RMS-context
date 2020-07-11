@@ -30,7 +30,7 @@ def get_request_values(request):
     currentSession = models.UserSession.objects.filter(token=token).first()
 
     if currentSession:
-        destination_url = currentSession.application.base_url
+        destination_url = currentSession.service.base_url
 
     target_destination = destination_url + client_path + query
 
