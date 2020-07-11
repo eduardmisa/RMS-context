@@ -11,47 +11,20 @@ class LoginSerializer(serializers.Serializer):
     scope = serializers.CharField(max_length=255, required=False)
 
 
-# Current user context application MODULES
-class CurrentUserContextModulesSerializer(serializers.Serializer):
-    code = serializers.CharField(max_length=255)
-    name = serializers.CharField(max_length=255)
-    icon = serializers.CharField(max_length=255, required=False)
-    url = serializers.CharField(max_length=255, required=False)
-    parent = serializers.CharField(max_length=255, required=False)
-
-
-# Current user context application WEB
-class CurrentUserContextApplicationWebSerializer(serializers.Serializer):
-    code = serializers.CharField(max_length=255)
-    url = serializers.CharField(max_length=255, required=False)
-
-
-# Current user context application API
-class CurrentUserContextApplicationApiSerializer(serializers.Serializer):
-    code = serializers.CharField(max_length=255)
-    method = serializers.CharField(max_length=255)
-    url = serializers.CharField(max_length=255)
-
-
-# Current user context APPLICATION
-class CurrentUserContextApplicationSerializer(serializers.Serializer):
-    client_id = serializers.IntegerField()
-    name = serializers.CharField(max_length=255)
-    description = serializers.CharField(max_length=255)
-    is_administrator = serializers.BooleanField()
-    user_modules = CurrentUserContextModulesSerializer(many=True)
-    web_urls = CurrentUserContextApplicationWebSerializer(many=True)
-    api_urls = CurrentUserContextApplicationApiSerializer(many=True)
-
-
 # Current user context final response
-class CurrentUserContextSerializer(serializers.Serializer):
+class CurrentUserSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=255)
     username = serializers.CharField(max_length=255)
     email = serializers.CharField(max_length=255)
     firstname = serializers.CharField(max_length=255)
     middlename = serializers.CharField(max_length=255)
     lastname = serializers.CharField(max_length=255)
     birthdate = serializers.CharField(max_length=255)
-    group = serializers.ListField()
     is_superuser = serializers.BooleanField()
-    # application = CurrentUserContextApplicationSerializer()
+    group = serializers.ListField()
+
+
+class CurrentUserScopeSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=255)
+    modules = serializers.ListField()
+    service_routes = serializers.ListField()

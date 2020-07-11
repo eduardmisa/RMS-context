@@ -8,7 +8,7 @@ from django.db.models import F, Q, Sum
 from .serializers import *
 from django.utils.crypto import get_random_string
 from datetime import datetime, timedelta
-from data_layer.session_data_layer import get_current_user
+from data_layer.session_data_layer import get_current_user, get_current_user_scope
 import bcrypt
 
 
@@ -113,15 +113,22 @@ class Login(APIView):
         })
 
 
-class CurrentUserContext(APIView):
+class CurrentUser(APIView):
     
     def get(self, request, *args, **kwargs):
-        serializer = CurrentUserContextSerializer
-
+        serializer = CurrentUserSerializer
         user_context = get_current_user(request.user, request.auth)
-
         serializer = serializer(user_context)
+        return Response(data=serializer.data,
+                        status=status.HTTP_200_OK)
 
+
+class CurrentUserScope(APIView):
+    
+    def get(self, request, *args, **kwargs):
+        serializer = CurrentUserScopeSerializer
+        user_context = get_current_user_scope(request.user, request.auth)
+        serializer = serializer(user_context)
         return Response(data=serializer.data,
                         status=status.HTTP_200_OK)
 

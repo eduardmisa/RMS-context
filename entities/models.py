@@ -83,7 +83,7 @@ class ServiceRoute(BaseClass):
         default=1)
 
     def __str__(self):
-        return f'{self.service.name}-[{self.method}]-{self.url}'
+        return f'[{self.method}]{self.url}'
 
     class Meta:
         db_table = 'service_routes'
@@ -114,7 +114,7 @@ class Permission(BaseClass):
         blank=False,
         null=False,
         default=1)
-    service_route = models.ManyToManyField(
+    service_routes = models.ManyToManyField(
         ServiceRoute,
         related_name='permissions',
         blank=True)
@@ -124,44 +124,6 @@ class Permission(BaseClass):
 
     class Meta:
         db_table = 'permissions'
-
-
-class Group(BaseClass):
-    code = models.CharField(
-        unique=True,
-        blank=False,
-        null=False,
-        max_length=10)
-    name = models.CharField(
-        blank=False,
-        null=False,
-        max_length=50)
-    description = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True)
-    has_all_access = models.BooleanField(
-        default=False)
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.PROTECT,
-        related_name='groups',
-        blank=False,
-        null=False,
-        default=1)
-    permissions = models.ManyToManyField(
-        Permission,
-        related_name='groups',
-        blank=True)
-
-    def __str__(self):
-        return f'{self.name}'
-
-    class Meta:
-        db_table = 'groups'
-        unique_together=[
-            'name',
-            'service']
 
 
 class Module(BaseClass):
@@ -195,18 +157,63 @@ class Module(BaseClass):
         blank=False,
         null=False,
         default=1)
+    route = models.ForeignKey(
+        ServiceRoute,
+        on_delete=models.PROTECT,
+        related_name='modules',
+        blank=True,
+        null=True)
 
     def __str__(self):
-        if not self.parent:
-            return f'{self.name}'
-        else:
-            return f'{self.parent}-{self.name}'
+        return f'{self.name}'
 
     class Meta:
         db_table = 'modules'
         unique_together=[
             'name',
             'parent',
+            'service']
+
+
+class Group(BaseClass):
+    code = models.CharField(
+        unique=True,
+        blank=False,
+        null=False,
+        max_length=10)
+    name = models.CharField(
+        blank=False,
+        null=False,
+        max_length=50)
+    description = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True)
+    has_all_access = models.BooleanField(
+        default=False)
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.PROTECT,
+        related_name='groups',
+        blank=False,
+        null=False,
+        default=1)
+    permissions = models.ManyToManyField(
+        Permission,
+        related_name='groups',
+        blank=True)
+    modules = models.ManyToManyField(
+        Module,
+        related_name='groups',
+        blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        db_table = 'groups'
+        unique_together=[
+            'name',
             'service']
 
 

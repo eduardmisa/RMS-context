@@ -31,3 +31,4 @@ class ApiMethodEnum(Enum):
     POST = "POST"
     PUT = "PUT"
     DELETE = "DELETE"
+    ROUTE = "ROUTE"

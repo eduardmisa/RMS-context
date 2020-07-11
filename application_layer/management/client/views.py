@@ -11,7 +11,6 @@ from .serializers import *
 from .filtersets import *
 
 
-
 class ClientViewSet(CrudViewSet):
     lookup_field = 'code'
     queryset = models.Client.objects.all().order_by('-id')

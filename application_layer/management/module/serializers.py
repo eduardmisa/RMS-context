@@ -2,39 +2,50 @@ from rest_framework import serializers
 from entities import models
 from application_layer.management.module.serializers import *
 from application_layer.management.service.serializers import *
+from application_layer.management.service_route.serializers import *
 
 
 class ModuleListSerializer(serializers.ModelSerializer):
     parent = serializers.StringRelatedField()
     service = serializers.StringRelatedField()
+    route = serializers.StringRelatedField()
     class Meta:
         model = models.Module
-        fields = ['code',
-                  'name',
-                  'description',
-                  'icon',
-                  'parent',
-                  'service']
+        fields = [
+            'code',
+            'name',
+            'description',
+            'icon',
+            'parent',
+            'service',
+            'route']
 
 class ModuleRetrieveSerializer(serializers.ModelSerializer):
     parent = ModuleListSerializer()
     service = ServiceListSerializer()
+    route = ServiceRouteListSerializer()
     class Meta:
         model = models.Module
-        fields = ['code',
-                  'name',
-                  'description',
-                  'icon',
-                  'parent',
-                  'service']
+        fields = [
+            'code',
+            'name',
+            'description',
+            'icon',
+            'parent',
+            'service',
+            'route']
 
 class ModuleCreateSerializer(serializers.ModelSerializer):
     parent = serializers.SlugRelatedField(
         slug_field='code',
-        queryset=models.Module.objects)
+        queryset=models.Module.objects,
+        allow_null=True)
     service = serializers.SlugRelatedField(
         slug_field='code',
         queryset=models.Service.objects)
+    route = serializers.SlugRelatedField(
+        slug_field='code',
+        queryset=models.ServiceRoute.objects)
     class Meta:
         model = models.Module
         fields = [
@@ -42,7 +53,8 @@ class ModuleCreateSerializer(serializers.ModelSerializer):
             'description',
             'icon',
             'parent',
-            'service']
+            'service',
+            'route']
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset = models.Module.objects.all(),
@@ -61,6 +73,9 @@ class ModuleUpdateSerializer(serializers.ModelSerializer):
     service = serializers.SlugRelatedField(
         slug_field='code',
         queryset=models.Service.objects)
+    route = serializers.SlugRelatedField(
+        slug_field='code',
+        queryset=models.ServiceRoute.objects)
     class Meta:
         model = models.Module
         fields = [
@@ -68,7 +83,8 @@ class ModuleUpdateSerializer(serializers.ModelSerializer):
             'description',
             'icon',
             'parent',
-            'service']
+            'service',
+            'route']
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset = models.Module.objects.all(),
@@ -83,11 +99,14 @@ class ModuleUpdateSerializer(serializers.ModelSerializer):
 class ModuleDeleteSerializer(serializers.ModelSerializer):
     parent = serializers.StringRelatedField()
     service = serializers.StringRelatedField()
+    route = serializers.StringRelatedField()
     class Meta:
         model = models.Module
-        fields = ['code',
-                  'name',
-                  'description',
-                  'icon',
-                  'parent',
-                  'service']
+        fields = [
+            'code',
+            'name',
+            'description',
+            'icon',
+            'parent',
+            'service',
+            'route']
