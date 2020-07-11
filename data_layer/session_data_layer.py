@@ -15,7 +15,7 @@ def get_current_user_scope(request_user, request_session):
     # service_routes = list(map(lambda row: '[' + row['method'] + ']' + row['url'],
     #                           list(models.ServiceRoute.objects.filter(permissions__groups__users__id=request_user.id).values('method','url'))))
     service_routes = models.ServiceRoute.objects.filter(permissions__groups__users__id=request_user.id).values('method','url')
-    modules = models.Module.objects.filter(groups__users__id=request_user.id).values('name','parent__name','route__url')
+    modules = models.Module.objects.filter(groups__users__id=request_user.id).values('code','name','icon','parent__code','route__url')
     
     return {
         "token": token,

@@ -45,7 +45,8 @@ class ModuleCreateSerializer(serializers.ModelSerializer):
         queryset=models.Service.objects)
     route = serializers.SlugRelatedField(
         slug_field='code',
-        queryset=models.ServiceRoute.objects)
+        queryset=models.ServiceRoute.objects,
+        allow_null=True)
     class Meta:
         model = models.Module
         fields = [
@@ -69,13 +70,15 @@ class ModuleCreateSerializer(serializers.ModelSerializer):
 class ModuleUpdateSerializer(serializers.ModelSerializer):
     parent = serializers.SlugRelatedField(
         slug_field='code',
-        queryset=models.Module.objects)
+        queryset=models.Module.objects,
+        allow_null=True)
     service = serializers.SlugRelatedField(
         slug_field='code',
         queryset=models.Service.objects)
     route = serializers.SlugRelatedField(
         slug_field='code',
-        queryset=models.ServiceRoute.objects)
+        queryset=models.ServiceRoute.objects,
+        allow_null=True)
     class Meta:
         model = models.Module
         fields = [
