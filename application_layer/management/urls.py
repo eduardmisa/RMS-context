@@ -2,7 +2,13 @@ from django.urls import path, include
 from rest_framework import routers
 from django.conf.urls import url
 
-from .views import *
+from .service.views import ServiceViewSet
+from .service_route.views import ServiceRouteViewSet
+from .permission.views import PermissionViewSet
+from .module.views import ModuleViewSet
+from .group.views import GroupViewSet
+from .user.views import UserViewSet
+from .client.views import ClientViewSet
 
 router = routers.DefaultRouter()
 
