@@ -10,7 +10,6 @@ class PermissionFilterSet(filters.FilterSet):
         field_name="service__code",
         to_field_name="code",
     )
-
     class Meta:
         model = models.Permission
         fields = ('__all__')
