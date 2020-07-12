@@ -11,9 +11,12 @@ def get_current_user(request_user, request_session):
 def get_current_user_scope(request_user, request_session):
     token = request_session.token
     if request_user.is_superuser:
-        # backend routes always allows superuser to access all resources,
-        # no need to list it all.
-        service_routes = []
+        service_routes = models.ServiceRoute.objects\
+            .filter(
+                service__clients__user_sessions__token=token)\
+            .values(
+                'method',
+                'url')
     else:
         service_routes = models.ServiceRoute.objects\
             .filter(
