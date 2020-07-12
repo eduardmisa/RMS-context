@@ -116,8 +116,9 @@ class Permission(BaseClass):
         default=1)
     service_routes = models.ManyToManyField(
         ServiceRoute,
-        related_name='permissions',
-        blank=True)
+        through='PermissionsServiceRoutes',
+        through_fields=('permission', 'service_route'),
+        related_name='permissions')
 
     def __str__(self):
         return f'{self.name}'
@@ -151,8 +152,9 @@ class Group(BaseClass):
         default=1)
     permissions = models.ManyToManyField(
         Permission,
-        related_name='groups',
-        blank=True)
+        through='GroupsPermissions',
+        through_fields=('group', 'permission'),
+        related_name='groups')
 
     def __str__(self):
         return f'{self.name}'
@@ -212,7 +214,11 @@ class User(BaseClass):
         default=False)
     groups = models.ManyToManyField(
         Group,
+        through='UsersGroups',
+        through_fields=('user', 'group'),
         related_name='users')
+
+
 
     def __str__(self):
         return f'{self.username}'
@@ -299,3 +305,26 @@ class UserSession(BaseClass):
             'user',
             'service',
             'client']
+
+
+'''
+MANY TO MANY
+Through Tables
+'''
+class PermissionsServiceRoutes(BaseClass):
+    permission = models.ForeignKey(Permission, on_delete=models.PROTECT)
+    service_route = models.ForeignKey(ServiceRoute, on_delete=models.PROTECT)
+    class Meta:
+        db_table = 'permissions_service_routes'
+
+class GroupsPermissions(BaseClass):
+    group = models.ForeignKey(Group, on_delete=models.PROTECT)
+    permission = models.ForeignKey(Permission, on_delete=models.PROTECT)
+    class Meta:
+        db_table = 'groups_permissions'
+
+class UsersGroups(BaseClass):
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    group = models.ForeignKey(Group, on_delete=models.PROTECT)
+    class Meta:
+        db_table = 'users_groups'
