@@ -50,7 +50,8 @@ class IsAuthenticated(permissions.BasePermission):
 
         rms_context_allowed_urls = set([
             '/api/v1/auth/login/', 
-            '/api/v1/auth/current-user-context/'])
+            '/api/v1/auth/current-user/',
+            '/api/v1/auth/current-user/scope/'])
 
         if inputs['client_path'] in rms_context_allowed_urls:
             return True
