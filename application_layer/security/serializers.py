@@ -26,5 +26,4 @@ class CurrentUserSerializer(serializers.Serializer):
 
 class CurrentUserScopeSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=255)
-    modules = serializers.ListField()
     service_routes = serializers.ListField()

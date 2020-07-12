@@ -16,7 +16,6 @@ class PrefixEnum(Enum):
     Service = "SVC"
     ServiceRoute = "SVR"
     Permission = "PRM"
-    Module = "MOD"
     Group = "GRP"
     Client = "CLI"
 

@@ -14,17 +14,6 @@ def get_current_user_scope(request_user, request_session):
         # backend routes always allows superuser to access all resources,
         # no need to list it all.
         service_routes = []
-        # Modules need to be loaded in frontend,
-        # so we need to list them all.
-        modules = models.Module.objects\
-            .filter(
-                service__clients__user_sessions__token=token)\
-            .values(
-                'code',
-                'name',
-                'icon',
-                'parent__code',
-                'route__url')
     else:
         service_routes = models.ServiceRoute.objects\
             .filter(
@@ -33,18 +22,7 @@ def get_current_user_scope(request_user, request_session):
             .values(
                 'method',
                 'url')
-        modules = models.Module.objects\
-            .filter(
-                service__clients__user_sessions__token=token,
-                groups__users__id=request_user.id)\
-            .values(
-                'code',
-                'name',
-                'icon',
-                'parent__code',
-                'route__url')
     
     return {
         "token": token,
-        "modules": modules,
         "service_routes": service_routes}

@@ -126,55 +126,6 @@ class Permission(BaseClass):
         db_table = 'permissions'
 
 
-class Module(BaseClass):
-    code = models.CharField(
-        unique=True,
-        blank=False,
-        null=False,
-        max_length=10)
-    name = models.CharField(
-        blank=False,
-        null=False,
-        max_length=50)
-    description = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True)
-    icon = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True)
-    parent = models.ForeignKey(
-        "self",
-        on_delete=models.PROTECT,
-        related_name='sub_modules',
-        null=True,
-        default=None)
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.PROTECT,
-        related_name='modules',
-        blank=False,
-        null=False,
-        default=1)
-    route = models.ForeignKey(
-        ServiceRoute,
-        on_delete=models.PROTECT,
-        related_name='modules',
-        blank=True,
-        null=True)
-
-    def __str__(self):
-        return f'{self.name}'
-
-    class Meta:
-        db_table = 'modules'
-        unique_together=[
-            'name',
-            'parent',
-            'service']
-
-
 class Group(BaseClass):
     code = models.CharField(
         unique=True,
@@ -200,10 +151,6 @@ class Group(BaseClass):
         default=1)
     permissions = models.ManyToManyField(
         Permission,
-        related_name='groups',
-        blank=True)
-    modules = models.ManyToManyField(
-        Module,
         related_name='groups',
         blank=True)
 
