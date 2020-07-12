@@ -86,9 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': config['DATABASE']['DATABASE_ENGINE'],
@@ -100,8 +97,6 @@ DATABASES = {
     }
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Singapore'
@@ -112,9 +107,6 @@ USE_L10N = True
 
 USE_TZ = False
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = '/static/'
 
 # REST_SESSION_LOGIN = True
@@ -134,8 +126,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'application_layer.paginator.SimplePageNumberPagination',
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'EXCEPTION_HANDLER': 'application_layer.exception.custom_exception_handler',
     'UNAUTHENTICATED_USER': None
 }
 
