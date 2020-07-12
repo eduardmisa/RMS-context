@@ -109,9 +109,7 @@ class Login(APIView):
             'scope': scope,
         })
 
-
 class CurrentUser(APIView):
-    
     def get(self, request, *args, **kwargs):
         serializer = CurrentUserSerializer
         user_context = get_current_user(request.user, request.auth)
@@ -119,16 +117,13 @@ class CurrentUser(APIView):
         return Response(data=serializer.data,
                         status=status.HTTP_200_OK)
 
-
 class CurrentUserScope(APIView):
-    
     def get(self, request, *args, **kwargs):
         serializer = CurrentUserScopeSerializer
         user_context = get_current_user_scope(request.user, request.auth)
         serializer = serializer(user_context)
         return Response(data=serializer.data,
                         status=status.HTTP_200_OK)
-
 
 class GetDestinationUrl(APIView):
     
