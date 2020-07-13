@@ -7,11 +7,13 @@ def get_request_values(request):
     req = request
 
     client_header = dict(req.headers)
-    client_body = dict(req.data)
+    client_body = req.data
     client_files = dict(req.FILES)
     client_method = str(req.method)
     client_path = str(req.path)
     client_query = req.query_params
+
+    client_path = client_path.replace('gw/','')
 
     query = '&'.join("{!s}={!r}".format(key,val) for (key,val) in client_query.items()).replace("'","")
     if query:

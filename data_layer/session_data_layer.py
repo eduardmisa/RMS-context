@@ -16,7 +16,7 @@ def get_current_user_scope(request_user, request_session):
             .filter(users__user_sessions__token=token)\
             .values('has_all_access')\
             .first()['has_all_access']
-    except expression as identifier:
+    except:
         pass
     if request_user.is_superuser or is_admin:
         service_routes = models.ServiceRoute.objects\
