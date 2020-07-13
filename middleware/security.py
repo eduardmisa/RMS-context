@@ -66,6 +66,12 @@ class IsAuthenticated(permissions.BasePermission):
 
         user_context_scope = get_current_user_scope(request.user, request.auth)
 
+        if not user_context_scope:
+            return False
+
+        if user_context_scope['is_admin']:
+            return True
+
         permissions = user_context_scope['service_routes']
         client_path = inputs.get('client_path')
         client_method = inputs.get('client_method')
