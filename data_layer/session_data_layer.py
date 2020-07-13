@@ -11,7 +11,14 @@ def get_current_user(request_user, request_session):
 def get_current_user_scope(request_user, request_session):
     token = request_session.token
     is_admin = False
-    if request_user.is_superuser:
+    try:
+        is_admin = models.Group.objects\
+            .filter(users__user_sessions__token=token)\
+            .values('has_all_access')\
+            .first()['has_all_access']
+    except expression as identifier:
+        pass
+    if request_user.is_superuser or is_admin:
         service_routes = models.ServiceRoute.objects\
             .filter(
                 service__clients__user_sessions__token=token)\
@@ -26,13 +33,7 @@ def get_current_user_scope(request_user, request_session):
             .values(
                 'method',
                 'url')
-        try:
-            is_admin = models.Group.objects\
-                .filter(users__user_sessions__token=token)\
-                .values('has_all_access')\
-                .first()['has_all_access']
-        except expression as identifier:
-            pass
+
     
     return {
         "token": token,
