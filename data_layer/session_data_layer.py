@@ -33,8 +33,6 @@ def get_current_user_scope(request_user, request_session):
             .values(
                 'method',
                 'url')
-
-    
     return {
         "token": token,
         "is_admin": is_admin,
