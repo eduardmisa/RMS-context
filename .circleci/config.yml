@@ -1,0 +1,64 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.3.2
+
+jobs:
+  install_rebuild:
+    executor: python/default
+    working_directory: ~/src
+    steps:
+      - checkout
+
+      - run:
+          name: Install Requirements in Venv
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - run:
+          name: Compress Build Files
+          command: |
+            mkdir compressed_build
+            touch compressed_build/BUILD.tar.gz
+            tar -zcvf compressed_build/BUILD.tar.gz --exclude=./compressed_build .
+
+      - run:
+          name: Remember Host RSA Key for this session
+          command: |
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST exit
+
+      - run:
+          name: Upload Build Files to Server
+          command: |
+            scp -r deploy/cicd/DEPLOYMENT_SCRIPT.sh $SSH_USER@$SSH_HOST:$BUILD_DUMP_PATH
+            scp -r compressed_build/BUILD.tar.gz $SSH_USER@$SSH_HOST:$BUILD_DUMP_PATH
+
+      - run:
+          name: Run Pre-Deployment Script
+          command: |
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "sudo sh $BUILD_DUMP_PATH/DEPLOYMENT_SCRIPT.sh"
+
+      - run:
+          name: REMOVING EXISTING CONTAINER SERVICES
+          command: |
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "sudo docker-compose -f $DEPLOYMENT_PATH/docker-compose.yml down"
+
+      - run:
+          name: CREATING NEW CONTAINER SERVICES
+          command: |
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "sudo docker-compose -f $DEPLOYMENT_PATH/docker-compose.yml up -d --build"
+
+
+      - store_artifacts:
+          path: compressed_build/
+
+# ORCHESTRATION
+workflows:
+  deploy_to_aws:
+    jobs:
+      - install_rebuild:
+          filters:
+            branches:
+              only: master
