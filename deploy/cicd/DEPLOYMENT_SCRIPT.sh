@@ -24,7 +24,7 @@ sudo tar -xzf $BUILD_DUMP_PATH/BUILD.tar.gz --directory $BUILD_DUMP_PATH
 echo "DONE"
 
 echo "03 - TRANSFORMING ENV TEMPLATE TO ENV FILE"
-sudo cp $BUILD_DUMP_PATH/.env.ini.template $BUILD_DUMP_PATH/.env.ini
+sudo cp $BUILD_DUMP_PATH/env.ini.template $BUILD_DUMP_PATH/env.ini
 echo "DONE"
 
 echo "04 - DELETE UPLOADED ZIP FILE"
