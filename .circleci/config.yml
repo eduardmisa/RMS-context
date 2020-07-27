@@ -10,12 +10,12 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install Requirements in Venv
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+      # - run:
+      #     name: Install Requirements in Venv
+      #     command: |
+      #       python3 -m venv venv
+      #       . venv/bin/activate
+      #       pip install -r requirements.txt
 
       - run:
           name: Compress Build Files
