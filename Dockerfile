@@ -7,5 +7,6 @@ WORKDIR /code
 # RUN pip install -r requirements.txt
 EXPOSE 8000
 
-# CMD python manage.py runserver 0.0.0.0:8001
-CMD sh -c 'source venv/bin/activate; python manage.py runserver 0.0.0.0:8001'
+ENV PATH="/venv/bin:$PATH"
+
+CMD python manage.py runserver 0.0.0.0:8001
