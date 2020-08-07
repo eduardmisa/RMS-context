@@ -1,6 +1,6 @@
 # MUST HAVE FILES in $BUILD_DUMP_PATH:
 #
-# BUILD.tar.gz.
+# BUILD.tar.gz
 #
 
 # VARAIBLES
