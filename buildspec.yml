@@ -17,7 +17,7 @@ phases:
       - docker --version
       # UPDATE AWS CLI TO 2 END
       - echo Logging in to Amazon ECR...
-      - docker login --username AWS --password $(aws ecr get-login-password --region ap-southeast-1) 048966230029.dkr.ecr.ap-southeast-1.amazonaws.com
+      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 048966230029.dkr.ecr.ap-southeast-1.amazonaws.com
       # - $(aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 048966230029.dkr.ecr.ap-southeast-1.amazonaws.com)
   build:
     commands:
