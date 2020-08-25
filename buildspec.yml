@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      # UPDATE AWS CLI TO 2 START
+      - aws --version
+      - mkdir /aws-update
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/aws-update/awscliv2.zip"
+      - unzip /aws-update/awscliv2.zip -d /aws-update
+      - which aws # /root/.pyenv/shims/aws
+      - ls -l /root/.pyenv/shims/aws
+      - ls -l /aws-update/
+      - /aws-update/aws/install --bin-dir /root/.pyenv/shims --install-dir /root/.pyenv/shims/aws-cli --update
+      - ls -l /root/.pyenv/shims/aws
+      - aws --version
+      - docker --version
+      # UPDATE AWS CLI TO 2 END
+      - echo Logging in to Amazon ECR...
+      - docker login --username AWS --password $(aws ecr get-login-password --region ap-southeast-1) 048966230029.dkr.ecr.ap-southeast-1.amazonaws.com
+      # - $(aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 048966230029.dkr.ecr.ap-southeast-1.amazonaws.com)
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo TRANSFORMING ENV TEMPLATE TO ENV FILE
+      - cp env.ini.template env.ini | ls -la
+      - echo Building the Docker image...
+      - docker build -t rms-context .
+      - docker tag rms-context:latest 048966230029.dkr.ecr.ap-southeast-1.amazonaws.com/rms-context:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 048966230029.dkr.ecr.ap-southeast-1.amazonaws.com/rms-context:latest
