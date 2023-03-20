@@ -51,6 +51,10 @@ INSERT INTO `clients` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `
 DROP TABLE IF EXISTS `clients_services`;
 CREATE TABLE IF NOT EXISTS `clients_services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime(6) NOT NULL,
+  `createdby` varchar(255) NOT NULL,
+  `modified` datetime(6) NOT NULL,
+  `modifiedby` varchar(255) NOT NULL,
   `client_id` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -128,6 +132,10 @@ CREATE TABLE IF NOT EXISTS `groups` (
 DROP TABLE IF EXISTS `groups_permissions`;
 CREATE TABLE IF NOT EXISTS `groups_permissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime(6) NOT NULL,
+  `createdby` varchar(255) NOT NULL,
+  `modified` datetime(6) NOT NULL,
+  `modifiedby` varchar(255) NOT NULL,
   `group_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -167,13 +175,17 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 DROP TABLE IF EXISTS `permissions_service_routes`;
 CREATE TABLE IF NOT EXISTS `permissions_service_routes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime(6) NOT NULL,
+  `createdby` varchar(255) NOT NULL,
+  `modified` datetime(6) NOT NULL,
+  `modifiedby` varchar(255) NOT NULL,
   `permission_id` int(11) NOT NULL,
-  `serviceroute_id` int(11) NOT NULL,
+  `service_route_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `permissions_service_rout_permission_id_servicerou_dc547adc_uniq` (`permission_id`,`serviceroute_id`),
-  KEY `permissions_service__serviceroute_id_c9c8ea8c_fk_service_r` (`serviceroute_id`),
+  UNIQUE KEY `permissions_service_rout_permission_id_servicerou_dc547adc_uniq` (`permission_id`,`service_route_id`),
+  KEY `permissions_service__service_route_id_c9c8ea8c_fk_service_r` (`service_route_id`),
   CONSTRAINT `permissions_service__permission_id_a3a7d95e_fk_permissio` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`),
-  CONSTRAINT `permissions_service__serviceroute_id_c9c8ea8c_fk_service_r` FOREIGN KEY (`serviceroute_id`) REFERENCES `service_routes` (`id`)
+  CONSTRAINT `permissions_service__service_route_id_c9c8ea8c_fk_service_r` FOREIGN KEY (`service_route_id`) REFERENCES `service_routes` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table rms_context_db.permissions_service_routes: ~0 rows (approximately)
@@ -324,6 +336,10 @@ INSERT INTO `users` (`id`, `created`, `createdby`, `modified`, `modifiedby`, `co
 DROP TABLE IF EXISTS `users_groups`;
 CREATE TABLE IF NOT EXISTS `users_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime(6) NOT NULL,
+  `createdby` varchar(255) NOT NULL,
+  `modified` datetime(6) NOT NULL,
+  `modifiedby` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
